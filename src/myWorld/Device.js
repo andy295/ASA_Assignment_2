@@ -1,5 +1,5 @@
 const Observable =  require('../utils/Observable')
-const Logger =  require('./logger')
+const Logger =  require('./Logger')
 
 class Device extends Observable {
     constructor (name, status, movable, consumption) {
@@ -41,11 +41,11 @@ class Light extends Device {
         if (!this.getStatus()) {
             this.setStatus(true)
 
-            console.log($(this.name) + ' light turned on');
+            console.log(this.name + ' light turned on');
             return;
         }
 
-        console.log($(this.name) + ' light already on');
+        console.log(this.name + ' light already on');
     }
 
     switchLightOff() {

@@ -1,11 +1,11 @@
-const Device = require('./device')
-const MyHashTable = require('./myHasTable')
-const Logger =  require('./logger')
+const Device = require('./Device')
+const Logger =  require('./Logger')
 
 class Room {
-    constructor (name, level, doors_to, devices) {
+    constructor (name, level, in_people_nr, doors_to, devices) {
         this.name = name;
         this.level = level;
+        this.in_people_nr = in_people_nr;
         this.doors_to = doors_to;
 
         this.devices = new Object();
@@ -33,7 +33,7 @@ class Room {
     }
 
     #generateDeviceList(devices) {
-        const devicesData = require('./house_config/devices.json');
+        const devicesData = require('./house_config/Devices.json');
          for (let i = 0; i < devices.length; i++) {
             for(let j = 0; j < devicesData.length; j++)
             {
@@ -77,30 +77,39 @@ class Room {
     }
 
     getDevice(device) {
-        for (let i = 0; i < this.doors_to.length; i++)
-            if (this.doors_to[i] == doors_to)
-                return i;
+        for (let d in this.devices)
+            if (this.devices[d].getName() == device) {
+                return this.devices[d];
+            }
 
-        return -1;
+        return '';
     }
 
     moveDeviceTo (device, to) {
         let idx = this.getDevice(device);
         if (idx == -1) {
-            console.log($(device) + ' is not in ' + $(this.name));
+            console.log(device + ' is not in ' + this.name);
             return false;
         }
 
         if (!devices[idx].movable) {
-            console.log($(device) + ' cannot be removed from ' + $(this.name));
+            console.log(device + ' cannot be removed from ' + this.name);
             return false;
         }
         
         let dev = this.#removeDevice(idx);
         to.addDevice(dev);
-        console.log($(device) + ' moved from ' + $(this.name) + ' to ' + $(to.name));
+        console.log(device + ' moved from ' + this.name + ' to ' + to.name);
         return true;
     }
+
+    increasePeopleNr() {
+        ++this.in_people_nr;
+    }
+
+    decreasePeopleNr() {
+        --this.in_people_nr;
+    } 
 }
 
 module.exports = Room;

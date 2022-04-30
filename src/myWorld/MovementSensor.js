@@ -1,6 +1,6 @@
 const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
-const Room = require('./room');
+const Room = require('./Room');
 
 class SenseMovementsGoal extends Goal {
 
@@ -39,8 +39,17 @@ class SenseMovementsIntention extends Intention {
                     while (true) {
                         let status = await person.notifyChange('in_room')
                         this.log('sense: ' + person.name + ' in ' + person.in_room )
-                        // this.agent.beliefs.declare('light_on '+l.name, status=='on')
-                        // this.agent.beliefs.declare('light_off '+l.name, status=='off')
+                        this.agent.beliefs.declare('people_in_' + person.in_room, true)
+                        
+                        for (let r in this.rooms) {
+                            let room = this.rooms[r];
+                            if (room.name == person.prev_room) {
+                                if (room.in_people_nr == 0)
+                                    this.agent.beliefs.undeclare('people_in_' + person.prev_room);        
+                                
+                                break;
+                            }
+                        }
                     }
                 });
 

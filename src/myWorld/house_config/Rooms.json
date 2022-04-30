@@ -1,7 +1,8 @@
 [
 	{
 		"name":"entrance",
-		"level":0,  
+		"level":0,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"living_room",
@@ -21,7 +22,8 @@
 	},
 	{
 		"name":"kitchen",
-		"level":0,  
+		"level":0,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"entrance",
@@ -42,7 +44,8 @@
 	},
 	{
 		"name":"pantry",
-		"level":0,  
+		"level":0,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"kitchen"
@@ -59,7 +62,8 @@
 	},
 	{
 		"name":"living_room",
-		"level":0,  
+		"level":0,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"entrance",
@@ -77,7 +81,8 @@
 	},
 	{
 		"name":"gf_bathroom",
-		"level":0,  
+		"level":0,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"entrance"
@@ -93,7 +98,8 @@
 	},
 	{
 		"name":"garage",
-		"level":0,  
+		"level":0,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"entrance",
@@ -111,7 +117,8 @@
 	},
 	{
 		"name":"l_first_floor",
-		"level":1,  
+		"level":1,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"entrance",
@@ -131,7 +138,8 @@
 	},
 	{
 		"name":"study",
-		"level":1,  
+		"level":1,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"l_first_floor",
@@ -149,7 +157,8 @@
 	},
 	{
 		"name":"ff_bathroom",
-		"level":1,  
+		"level":1,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"l_first_floor",
@@ -168,7 +177,8 @@
 	},
 	{
 		"name":"laundry",
-		"level":1,  
+		"level":1,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"l_first_floor",
@@ -190,6 +200,7 @@
 	{
 		"name":"bedroom", 
 		"level":1,
+		"in_people_nr":2,
 		"doors_to": 
 		[
 			"l_first_floor"
@@ -207,6 +218,7 @@
 	{
 		"name":"balcony", 
 		"level":1,
+		"in_people_nr":0,
 		"doors_to": 
 		[
 			"study",

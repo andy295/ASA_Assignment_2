@@ -1,4 +1,5 @@
 const Observable =  require('./Observable')
+const {DaysEnum, MonthsEnum} = require('../myWorld/Calendar')
 
 /**
  * @static {global} is the global time
@@ -15,7 +16,8 @@ class Clock {
 
     static format() {
         var time = Clock.global;
-        return '' + time.dd + ':' + (time.hh < 10? '0' : '') + time.hh + ':' + (time.mm == 0 ? '00' : time.mm);
+        let day = Object.keys(DaysEnum).find(k => DaysEnum[k] === time.dd);
+        return '' + day + ' ' + (time.hh < 10 ? '0' : '') + time.hh + ':' + (time.mm == 0 ? '00' : time.mm);
     }
 
     static #start = true;
@@ -34,33 +36,30 @@ class Clock {
             var {dd, hh, mm} = Clock.global;
             
             if (mm < 60 - 15)
-                Clock.global.mm += 5;
+                Clock.global.mm += 15;
             else {
-                if (dd < 1) {
-                    if (hh < 24) {
-                        Clock.global.hh += 1; // increased hh but mm still 45
-                        Clock.global.mm = 0; // however, observers are handled as microtask so at the time they are called everything will be sync
-                    }
-                    else {
-                        Clock.global.mm = 0;
-                        Clock.global.hh = 0;
-                        Clock.global.dd += 1;
-                    }
-                } 
+                if (hh < 24) {
+                    Clock.global.hh += 1; // increased hh but mm still 45
+                    Clock.global.mm = 0; // however, observers are handled as microtask so at the time they are called everything will be sync
+                }
                 else {
-                    process.stdout.clearLine(0);
-                    process.stdout.cursorTo(0);
-                    break;
+                    Clock.global.mm = 0;
+                    Clock.global.hh = 0;
+                    Clock.global.dd += 1;
                 }
             }
 
-            // Here, time is logged immediately before any other observable gets updated!
-            process.stdout.clearLine(0);
-            process.stdout.cursorTo(0);
-            process.stdout.write(Clock.format() + '\t');
+            if (dd < 7) {
+                // Here, time is logged immediately before any other observable gets updated!
+                process.stdout.clearLine(0);
+                process.stdout.cursorTo(0);
+                process.stdout.write(Clock.format() + '\t');
+            }
+            else {
+                process.stdout.clearLine(0);
+                process.stdout.cursorTo(0);
+            }
         }
-
-        Clock.#start = false;
     }
 }
 
