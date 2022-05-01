@@ -23,17 +23,11 @@ class Person extends Observable {
 
         // let doors_to = this.house.getRoom(this.in_room); 
         // if (!(to in doors_to)) {
-        //     console.log(to + ' cannot be reached from ' + this.in_room);
-        //      return false;
+        //      todo
+        //      looks how, and if, the destination can be reached
+        //      maybe this is a planning ploblem 
         // }
 
-        // if (!(to in this.house.rooms.getItem(this.in_room).GetDoorsTo)) {
-        //     console.log($(to) + ' is not reachable from ' + $(this.in_room));
-        //     return false;
-        // }
-
-        // console.log(this.name + ' moved from ' + this.in_room + ' to ' + to);
-        
         this.prev_room = this.in_room;
         this.in_room = to;
         this.house.updateRoomStatus(this.prev_room, this.in_room);

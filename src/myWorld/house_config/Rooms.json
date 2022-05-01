@@ -227,5 +227,17 @@
 		],
 		"devices":
 		[ ]
+	},
+	{
+		"name":"outside", 
+		"level":0,
+		"in_people_nr":0,
+		"doors_to": 
+		[
+			"entrance",
+			"garage"
+		],
+		"devices":
+		[ ]
 	}
 ]

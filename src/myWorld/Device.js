@@ -40,23 +40,19 @@ class Light extends Device {
     switchLightOn() {
         if (!this.getStatus()) {
             this.setStatus(true)
-
-            console.log(this.name + ' light turned on');
-            return;
+            return true;
         }
 
-        console.log(this.name + ' light already on');
+        return false;
     }
 
     switchLightOff() {
         if (this.getStatus()) {
             this.setStatus(false)
-
-            console.log($(this.name) + ' light turned off');
-            return;
+            return true;
         }
 
-        console.log($(this.name) + ' light already off');
+        return false;
     }
 
     isLightOn() {
@@ -88,7 +84,7 @@ class Thermostat extends Device {
 
     setProgram(idx) {
         this.work_program = idx;
-        console.log($(this.#programs[idx]) + ' set up');   
+        console.log(this.#programs[idx] + ' set up');   
     }
 
     getTemperature() {

@@ -17,7 +17,7 @@ class Clock {
     static format() {
         var time = Clock.global;
         let day = Object.keys(DaysEnum).find(k => DaysEnum[k] === time.dd);
-        return '' + day + ' ' + (time.hh < 10 ? '0' : '') + time.hh + ':' + (time.mm == 0 ? '00' : time.mm);
+        return '' + day + ' ' + (time.hh < 10 ? '0' : '') + time.hh + ':' + (time.mm < 10 ? '0' : '') + time.mm;
     }
 
     static #start = true;
@@ -35,10 +35,10 @@ class Clock {
             
             var {dd, hh, mm} = Clock.global;
             
-            if (mm < 60 - 15)
-                Clock.global.mm += 15;
+            if (mm < 60)
+                Clock.global.mm += 5;
             else {
-                if (hh < 24) {
+                if (hh < 23) {
                     Clock.global.hh += 1; // increased hh but mm still 45
                     Clock.global.mm = 0; // however, observers are handled as microtask so at the time they are called everything will be sync
                 }

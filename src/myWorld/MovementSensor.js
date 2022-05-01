@@ -40,13 +40,21 @@ class SenseMovementsIntention extends Intention {
                         let status = await person.notifyChange('in_room')
                         this.log('sense: ' + person.name + ' in ' + person.in_room )
                         this.agent.beliefs.declare('people_in_' + person.in_room, true)
-                        
-                        for (let r in this.rooms) {
-                            let room = this.rooms[r];
+
+                        // enable the following loop if you need more trace
+                        // for (let [key_t, room] of Object.entries(this.rooms)) {
+                        //     if (room.name == person.in_room) {
+                        //         this.log(room.in_people_nr + ' people in ' + room.name + ' (current)')
+                        //         break;
+                        //     }
+                        // }
+
+                        for (let [key_t, room] of Object.entries(this.rooms)) {
                             if (room.name == person.prev_room) {
+                                // enable the following instruction if you need more trace
+                                // this.log(room.in_people_nr + ' people in ' + room.name + ' (previous)')
                                 if (room.in_people_nr == 0)
                                     this.agent.beliefs.undeclare('people_in_' + person.prev_room);        
-                                
                                 break;
                             }
                         }
