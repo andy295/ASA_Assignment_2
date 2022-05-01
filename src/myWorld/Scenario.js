@@ -1,10 +1,11 @@
-const House =  require('./House')
-const Agent = require('../bdi/Agent')
+const House =  require('./House');
+const Agent = require('../bdi/Agent');
 const Clock =  require('../utils/Clock');
-const {AlarmGoal, AlarmIntention} = require('./Alarm')
-const {SenseMovementsGoal, SenseMovementsIntention} = require('./MovementSensor')
-const {ManageLightsGoal, ManageLightsIntention} = require('./LightManager')
-const {DaysEnum, MonthsEnum} = require('./Calendar')
+const {AlarmGoal, AlarmIntention} = require('./Alarm');
+const {SenseMovementsGoal, SenseMovementsIntention} = require('./MovementSensor');
+const {ManageLightsGoal, ManageLightsIntention} = require('./LightManager');
+const {DaysEnum, MonthsEnum} = require('./Calendar');
+const {ManageConsumptionGoal, ManageConsumptionIntention} = require('./ConsumptionManager');
 
 // House, which includes people, rooms and devices
 var house = new House();
@@ -22,11 +23,14 @@ agent.postSubGoal(new SenseMovementsGoal(house.people, house.rooms));
 agent.intentions.push(ManageLightsIntention);
 agent.postSubGoal(new ManageLightsGoal(house.rooms, 7, 23));
 
+agent.intentions.push(ManageConsumptionIntention);
+agent.postSubGoal(new ManageConsumptionGoal(house.rooms));
+
 // Daily schedule
 Clock.global.observe('mm', (key, mm) => {
     var time = Clock.global
 
-    if (time.dd < DaysEnum.saturday) {
+    if (time.dd <= DaysEnum.friday) {
         if (time.hh == 6 && time.mm == 50) {
             house.people.Adam.moveTo('ff_bathroom');
             house.people.Ashley.moveTo('ff_bathroom');
@@ -63,7 +67,7 @@ Clock.global.observe('mm', (key, mm) => {
             house.people.Ashley.moveTo('living_room');
         }
     } 
-    else if (time.dd >= DaysEnum.saturday && time.dd >= DaysEnum.sunday) {
+    else if (time.dd >= DaysEnum.saturday && time.dd <= DaysEnum.sunday) {
         if (time.hh == 7 && time.mm == 45) {
             house.people.Adam.moveTo('ff_bathroom');
             house.people.Ashley.moveTo('ff_bathroom');

@@ -1,5 +1,5 @@
-const Observable =  require('./Observable')
-const {DaysEnum, MonthsEnum} = require('../myWorld/Calendar')
+const Observable =  require('./Observable');
+const {DaysEnum, MonthsEnum} = require('../myWorld/Calendar');
 
 /**
  * @static {global} is the global time

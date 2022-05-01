@@ -1,6 +1,7 @@
-const Person =  require('./Person')
-const Room =  require('./Room')
-const Logger =  require('./Logger')
+const Person =  require('./Person');
+const Room =  require('./Room');
+const Utility =  require('./Utility');
+const Logger =  require('./Logger');
 
 class House {
     constructor () {
@@ -25,6 +26,14 @@ class House {
             this.rooms[roomsData[i].name] =  
                 new Room(roomsData[i].name, roomsData[i].level, roomsData[i].in_people_nr, doors_to, devices);
         }
+
+        // not used
+        // this.utilities = new Object();
+        // const utilitiesData = require('./house_config/Utilities.json');
+        // for (let i = 0; i < utilitiesData.length; i++) {   
+        //     this.utilities[utilitiesData[i].name] = 
+        //         new Utility(utilitiesData[i].name, utilitiesData[i].consumption);
+        // }
     }
 
     getRoomList() {

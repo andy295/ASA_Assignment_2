@@ -1,0 +1,10 @@
+[
+	{
+		"name":"electricity",
+        "consumption":0
+    },
+    {
+        "name":"gas",
+        "consumption":0
+    }
+]

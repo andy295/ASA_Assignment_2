@@ -1,6 +1,6 @@
 const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
-const Device = require('./Device')
+const Device = require('./Device');
 const Clock =  require('../utils/Clock');
 
 // how can I merge the following six classes in just two (goal and intention) ?
@@ -35,7 +35,7 @@ class ManageLightsIntention extends Intention {
     }
 
     lightNeeded() {
-        if (Clock.global.hh >= this.hh_from || Clock.global.hh < this.hh_to)
+        if (Clock.global.hh >= this.hh_from && Clock.global.hh < this.hh_to)
             return true;
 
         return false;
@@ -108,27 +108,27 @@ class AutoTurnLightOffIntention extends Intention {
     }
 
     *exec () {
-        var lightsGoals = [];
+        var lightsOffGoals = [];
         
-        for (let [key_t, room] of Object.entries(this.rooms)) {
-            if (room.devices.light) {
-                let lightOffGoalPromise = new Promise( async res => {
-                    while (true) {
-                        let status = await Clock.global.notifyChange('hh');
-                        if (Clock.global.hh > 7 ) {
-                            if (room.devices.light.isLightOn()) {
-                                room.devices.light.switchLightOff(); 
-                                this.agent.beliefs.undeclare(room.name + ' light_on')
+        let lightOffGoalPromise = new Promise( async res => {
+            while (true) {
+                let status = await Clock.global.notifyChange('mm');
+                    if (Clock.global.hh > this.hh && Clock.global.mm > this.mm) {
+                        for (let [key_t, room] of Object.entries(this.rooms)) {
+                            if (room.devices.light) {
+                                if (room.devices.light.isLightOn()) {
+                                    room.devices.light.switchLightOff(); 
+                                    this.agent.beliefs.undeclare(room.name + ' light_on')
+                                }
                             }
                         }
                     }
-                });
+                }
+            });
 
-                lightsGoals.push(lightOffGoalPromise);
-            }
-        }
+            lightsOffGoals.push(lightOffGoalPromise);
 
-        yield Promise.all(lightsGoals)
+        yield Promise.all(lightsOffGoals)
     }
 }
 

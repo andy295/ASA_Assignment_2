@@ -1,7 +1,7 @@
 const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
 const Clock = require('../utils/Clock');
-const {DaysEnum, MonthsEnum} = require('./Calendar')
+const {DaysEnum, MonthsEnum} = require('./Calendar');
 
 class AlarmGoal extends Goal {
     constructor (dd = -1, hh = 6, mm = 45, bedroom) {
@@ -60,6 +60,7 @@ class AlarmIntention extends Intention {
 
     *exec() {
         var alarmGoal = [];
+        
         let alarmGoalPromise = new Promise ( async res => {
             let curr_day = Clock.global.dd;
             while(true) {
