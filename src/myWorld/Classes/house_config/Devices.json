@@ -3,13 +3,13 @@
 		"name":"light",
 		"status":false,
         "movable":false,
-        "consumption":1
+        "consumption":0.003
     },
     {
         "name":"thermostat",
         "status":false,
         "movable":false,
-        "consumption":0,
+        "consumption":0.026,
         "temperature":20,
         "work_program":1
     }

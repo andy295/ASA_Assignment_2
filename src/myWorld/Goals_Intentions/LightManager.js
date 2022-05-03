@@ -1,7 +1,7 @@
-const Goal = require('../bdi/Goal');
-const Intention = require('../bdi/Intention');
-const Device = require('./Device');
-const Clock =  require('../utils/Clock');
+const Goal = require('../../bdi/Goal');
+const Intention = require('../../bdi/Intention');
+const Device = require('../Classes/Device');
+const Clock = require('../../utils/Clock');
 
 // how can I merge the following six classes in just two (goal and intention) ?
 
@@ -52,16 +52,16 @@ class ManageLightsIntention extends Intention {
                         if (this.lightNeeded()) {
                             if (status) {
                                 room.devices.light.switchLightOn();
-                                this.agent.beliefs.declare(room.name + ' light_on', true)
+                                this.agent.beliefs.declare(room.name + ' light_on');
                             }
                             else {
                                 room.devices.light.switchLightOff();
-                                this.agent.beliefs.undeclare(room.name + ' light_on')
+                                this.agent.beliefs.undeclare(room.name + ' light_on');
                             }
                         }
                         else {
                             room.devices.light.switchLightOff();
-                            this.agent.beliefs.undeclare(room.name + ' light_on')
+                            this.agent.beliefs.undeclare(room.name + ' light_on');
                         }
                     }
                 });
@@ -118,7 +118,7 @@ class AutoTurnLightOffIntention extends Intention {
                             if (room.devices.light) {
                                 if (room.devices.light.isLightOn()) {
                                     room.devices.light.switchLightOff(); 
-                                    this.agent.beliefs.undeclare(room.name + ' light_on')
+                                    this.agent.beliefs.undeclare(room.name + ' light_on');
                                 }
                             }
                         }
@@ -171,7 +171,7 @@ class AutoTurnLightOnIntention extends Intention {
                     if (Clock.global.hh == 20 && Clock.global.mm == 0) {
                         if (room.in_people_nr > 0 && room.devices.light && !room.devices.light.isLightOn()) {
                             room.devices.light.switchLightOn(); 
-                            this.agent.beliefs.declare(room.name + ' light_on', true)
+                            this.agent.beliefs.declare(room.name + ' light_on');
                         }
                     }
                 }

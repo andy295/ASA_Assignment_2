@@ -1,7 +1,6 @@
-const Person =  require('./Person');
-const Room =  require('./Room');
-const Utility =  require('./Utility');
-const Logger =  require('./Logger');
+const Person = require('./Person');
+const Room = require('./Room');
+const Utility = require('./Utility');
 
 class House {
     constructor () {

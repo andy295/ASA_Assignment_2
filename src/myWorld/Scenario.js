@@ -1,18 +1,19 @@
-const House =  require('./House');
+const House =  require('./Classes/House');
 const Agent = require('../bdi/Agent');
 const Clock =  require('../utils/Clock');
-const {AlarmGoal, AlarmIntention} = require('./Alarm');
-const {SenseMovementsGoal, SenseMovementsIntention} = require('./MovementSensor');
-const {ManageLightsGoal, ManageLightsIntention} = require('./LightManager');
-const {DaysEnum, MonthsEnum} = require('./Calendar');
-const {ManageConsumptionGoal, ManageConsumptionIntention} = require('./ConsumptionManager');
+const {DaysEnum, MonthsEnum} = require('./Utilities/Calendar');
+const {AlarmGoal, AlarmIntention} = require('./Goals_Intentions/AlarmManager');
+const {SenseMovementsGoal, SenseMovementsIntention} = require('./Goals_Intentions/MovementSensor');
+const {ManageLightsGoal, ManageLightsIntention} = require('./Goals_Intentions/LightManager');
+const {ManageConsumptionGoal, ManageConsumptionIntention} = require('./Goals_Intentions/ConsumptionManager');
+const {ManageThermostatsGoal, ManageThermostatsIntention} = require('./Goals_Intentions/ThermostatManager');
 
 // House, which includes people, rooms and devices
 var house = new House();
 
 // Agents
 var agent = new Agent('house_agent');
-agent.beliefs.declare('people_in_' + house.rooms.bedroom.getName(), true)
+agent.beliefs.declare('people_in_' + house.rooms.bedroom.getName());
 
 agent.intentions.push(AlarmIntention);
 agent.postSubGoal(new AlarmGoal(DaysEnum.monday, 6, 45, house.rooms.bedroom));
@@ -25,6 +26,19 @@ agent.postSubGoal(new ManageLightsGoal(house.rooms, 7, 23));
 
 agent.intentions.push(ManageConsumptionIntention);
 agent.postSubGoal(new ManageConsumptionGoal(house.rooms));
+
+agent.intentions.push(ManageThermostatsIntention);
+agent.postSubGoal(new ManageThermostatsGoal(house.rooms));
+
+// Check and update temperature 
+Clock.global.observe('hh', (key, hh) =>{
+    if (Clock.global.hh % 2 == 0) {
+        for (let [key_t, room] of Object.entries(house.rooms)) {
+            if (room.devices.thermostat)
+                room.devices.thermostat.updateTemperature()
+        }
+    }
+})
 
 // Daily schedule
 Clock.global.observe('mm', (key, mm) => {

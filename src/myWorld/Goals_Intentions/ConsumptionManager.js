@@ -1,7 +1,7 @@
-const Goal = require('../bdi/Goal');
-const Intention = require('../bdi/Intention');
-const Device = require('./Device');
-const Clock =  require('../utils/Clock');
+const Goal = require('../../bdi/Goal');
+const Intention = require('../../bdi/Intention');
+const Device = require('../Classes/Device');
+const Clock = require('../../utils/Clock');
 
 class ManageConsumptionGoal extends Goal {
 
@@ -32,16 +32,22 @@ class ManageConsumptionIntention extends Intention {
             while (true) {
                 let status = await Clock.global.notifyChange('mm');
                     if (Clock.global.hh == 23 && Clock.global.mm == 55) {
-                        let total_consumption = 0;
+                        let electricity_total_consumption = 0;
                         for (let [key_r, room] of Object.entries(this.rooms)) {
                             if (room.devices.light) {
                                 // console.log(room.name + ' light ' + room.devices.light.isLightOn())
-                                total_consumption += room.devices.light.getTotalConsumption();
+                                electricity_total_consumption += room.devices.light.getTotalConsumption();
                                 room.devices.light.resetTotalConsumption();
+                            }
+                            
+                            if (room.devices.thermostat) {
+                                // console.log(room.name + ' temperature ' + room.devices.thermostat.getTemperature())
+                                electricity_total_consumption += room.devices.thermostat.getTotalConsumption();
+                                room.devices.thermostat.resetTotalConsumption();
                             }
                         }   
                     
-                        console.log('\tLights total consumption: ' + (Math.round(total_consumption * 100) / 100).toFixed(2));
+                        console.log('\tElectricity total consumption: ' + (Math.round(electricity_total_consumption * 100) / 100).toFixed(2));
                     }
                 }
             });

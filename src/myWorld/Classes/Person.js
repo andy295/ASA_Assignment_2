@@ -1,5 +1,4 @@
-const Observable =  require('../utils/Observable');
-const Logger =  require('./Logger');
+const Observable = require('../../utils/Observable');
 
 class Person extends Observable {
     constructor (house, name, in_room) {

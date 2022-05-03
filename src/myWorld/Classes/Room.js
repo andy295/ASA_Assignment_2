@@ -1,5 +1,4 @@
 const Device = require('./Device');
-const Logger =  require('./Logger');
 
 class Room {
     constructor (name, level, in_people_nr, doors_to, devices) {

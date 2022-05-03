@@ -1,6 +1,5 @@
-const Observable =  require('../utils/Observable');
-const Clock =  require('../utils/Clock');
-const Logger =  require('./Logger');
+const Observable = require('../../utils/Observable');
+const Clock = require('../../utils/Clock');
 
 class Device extends Observable {
     constructor (name, status, movable, consumption) {
@@ -42,6 +41,8 @@ class Light extends Device {
     constructor (name, status, movable, consumption) {
         super(name, status, movable, consumption);
 
+        // consumption => kW/h
+
         this.start_time = 0; // [min]
     }
 
@@ -50,7 +51,7 @@ class Light extends Device {
             this.setStatus(true)
 
             let hToM = Clock.global.hh * 60;
-            this.start_time = hToM + Clock.global.mm; 
+            this.start_time = hToM + Clock.global.mm;
 
             return true;
         }
@@ -79,7 +80,7 @@ class Light extends Device {
         let end_time = hToM + Clock.global.mm;
         let elapsed_time = end_time - this.start_time;
 
-        this.total_consumption += (elapsed_time / 60) * this.consumption 
+        this.total_consumption += (elapsed_time / 60) * this.consumption;
     }
 }
 
@@ -89,12 +90,13 @@ class Thermostat extends Device {
     constructor (name, status, movable, consumption, temperature, work_program) {
         super(name, status, movable, consumption);
 
-        this.temperature = temperature;
+        // consumption => kW/h
+
         this.work_program = work_program;
-        this.start_time = 0;
-        this.default_temp = 21;
-        this.min_temp = 3;
-        this.max_temp = 3;
+        this.tollerance = 2;
+        this.desired_temperature = 22;
+        this.start_time_ccs;
+        this.set('temperature', temperature);
     }
 
     getWorkProgramName(prog_nr) {
@@ -122,48 +124,66 @@ class Thermostat extends Device {
         this.temperature = temperature; 
     }
 
-    isHeatingOn() {
+    isCCSystemOn() {
         return this.getStatus();
     }
 
-    updateTempertature() {
-        this.temperature = this.#generateRandomTemp();
-
-        if (this.temperature < this.default_temp)
-            this.switchHeatingOn();
-        else
-            this.switchLightOff();
+    getMinTemperature() {
+        return this.desired_temperature - this.tollerance;
     }
 
-    #generateRandomTemp() {
-        let difference = 
-            (this.temperature - this.min_temp) -
-            (this.temperature + this.max_temp);
-
-        let rand = Math.random();
-        rand = Math.floor(rand * difference);
-
-        rand = rand + min;
-
-        return rand;
+    getMaxTemperature() {
+        return this.desired_temperature + this.tollerance;
     }
 
-    switchHeatingOn() {
-        if (!this.isHeatingOn()) {
+    updateTemperature() {
+        this.temperature = this.#generateTemperature(18, 25);
+    }
+
+    #generateTemperature(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    switchCCSystemOn() {
+        if (!this.isCCSystemOn()) {
             this.setStatus(true)
+
+            this.start_time_heating = new Date(2022, 4, Clock.global.dd, Clock.global.hh, Clock.global.mm, 0, 0);
+
             return true;
         }
 
         return false;
     }
 
-    switchHeatingOff() {
-        if (this.getStatus()) {
+    switchCCSystemOff() {
+        if (this.isCCSystemOn()) {
             this.setStatus(false)
+
+            this.#calcConsumption(this.start_time_heating);
+    
             return true;
         }
 
         return false;
+    }
+
+    #calcConsumption(start_time) {
+        let end_time = new Date(2022, 4, Clock.global.dd, Clock.global.hh, Clock.global.mm, 0, 0);
+
+        let diffMs = (end_time - start_time); // milliseconds between start and end time
+        let diffDays = Math.floor(diffMs / 86400000); // days
+        let diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+        let diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+
+        let ddToMm = diffDays * 24 * 60;
+        let hhToMM = diffHrs * 60;
+
+        let elapsed_time = ddToMm + hhToMM + diffMins; 
+
+        this.total_consumption += (elapsed_time / 60) * this.consumption; 
     }
 }
 

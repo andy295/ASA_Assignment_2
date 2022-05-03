@@ -1,5 +1,3 @@
-const Logger =  require('./Logger');
-
 class Utility {
     constructor (name, consumption) {
         this.name = name;
