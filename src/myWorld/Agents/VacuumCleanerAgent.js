@@ -66,4 +66,4 @@ class VacuumCleanerAgent extends Agent {
     // a1.postSubGoal( new RetryGoal( { goal: new PlanningGoal( { goal: a1.goal } ) } ) )
 }
 
-module.exports = {VacuumCleanerAgent};
+module.exports = VacuumCleanerAgent;
