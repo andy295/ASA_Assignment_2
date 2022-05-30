@@ -11,7 +11,7 @@ class Room {
         this.clean = clean;
         this.type = type;
 
-        this.devices = new Object();
+        this.devices = {};
         this.#generateDeviceList(devices);
     }
 
@@ -37,34 +37,34 @@ class Room {
 
     #generateDeviceList(devices) {
         const devicesData = require('./house_config/Devices.json');
-         for (let i = 0; i < devices.length; i++) {
-            for(let j = 0; j < devicesData.length; j++)
+         for (const device of devices) {
+            for(const deviceData of devicesData)
             {
-                if (devicesData[j].name == devices[i]) {
-                    if (devicesData[j].name == 'light') {
-                        this.devices[devicesData[j].name] = 
+                if (deviceData.name == device) {
+                    if (deviceData.name == 'light') {
+                        this.devices[deviceData.name] = 
                             new Light(
-                                devicesData[j].name,
-                                devicesData[j].status,
-                                devicesData[j].movable,
-                                devicesData[j].consumption);   
+                                deviceData.name,
+                                deviceData.status,
+                                deviceData.movable,
+                                deviceData.consumption);   
                     }
-                    else if (devicesData[j].name == 'thermostat') {
-                        this.devices[devicesData[j].name] = 
+                    else if (deviceData.name == 'thermostat') {
+                        this.devices[deviceData.name] = 
                             new Thermostat(
-                                devicesData[j].name,
-                                devicesData[j].status,
-                                devicesData[j].movable,
-                                devicesData[j].consumption,
-                                devicesData[j].temperature,
-                                devicesData[j].work_program);
+                                deviceData.name,
+                                deviceData.status,
+                                deviceData.movable,
+                                deviceData.consumption,
+                                deviceData.temperature,
+                                deviceData.work_program);
                     }
-                    else if (devicesData[j].name == 'vacuumCleaner') {
+                    else if (deviceData.name == 'vacuumCleaner') {
                         new VacuumCleaner(
-                            devicesData[j].name,
-                            devicesData[j].status,
-                            devicesData[j].movable,
-                            devicesData[j].consumption,
+                            deviceData.name,
+                            deviceData.status,
+                            deviceData.movable,
+                            deviceData.consumption,
                             this.name);
                     }
                     break;
