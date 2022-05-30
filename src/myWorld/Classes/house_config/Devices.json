@@ -12,5 +12,11 @@
         "consumption":0.026,
         "temperature":20,
         "work_program":1
+    },
+    {
+        "name":"vacuumCleaner",
+        "status":false,
+        "movable":true,
+        "consumption":0.084
     }
 ]

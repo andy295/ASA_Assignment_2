@@ -1,6 +1,6 @@
 const Goal = require('../../bdi/Goal');
 const Intention = require('../../bdi/Intention');
-const Device = require('../Classes/Device');
+const Thermostat = require('../Classes/Devices/Thermostat');
 const Clock = require('../../utils/Clock');
 
 class ManageThermostatsGoal extends Goal {

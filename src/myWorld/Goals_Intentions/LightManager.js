@@ -1,6 +1,6 @@
 const Goal = require('../../bdi/Goal');
 const Intention = require('../../bdi/Intention');
-const Device = require('../Classes/Device');
+const Light = require('../Classes/Devices/Light');
 const Clock = require('../../utils/Clock');
 
 // how can I merge the following six classes in just two (goal and intention) ?

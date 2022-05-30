@@ -1,88 +1,5 @@
-const Observable = require('../../utils/Observable');
-const Clock = require('../../utils/Clock');
-
-class Device extends Observable {
-    constructor (name, status, movable, consumption) {
-        super({name: name, status: status});
-
-        this.name = name;
-        this.status = status;
-        this.movable = movable;
-        this.consumption = consumption;
-        this.set('total_consumption', 0);
-    }
-
-    getName() {
-        return this.name;
-    }
-
-    getStatus() {
-        return this.status;
-    }
-
-    setStatus(status) {
-        this.status = status;
-    }
-
-    isMovable() {
-        return this.movable;
-    }
-
-    getTotalConsumption() {
-        return this.total_consumption;
-    }
-
-    resetTotalConsumption() {
-        this.total_consumption = 0;
-    }
-}
-
-class Light extends Device {
-    constructor (name, status, movable, consumption) {
-        super(name, status, movable, consumption);
-
-        // consumption => kW/h
-
-        this.start_time = 0; // [min]
-    }
-
-    switchLightOn() {
-        if (!this.getStatus()) {
-            this.setStatus(true)
-
-            let hToM = Clock.global.hh * 60;
-            this.start_time = hToM + Clock.global.mm;
-
-            return true;
-        }
-
-        return false;
-    }
-
-    switchLightOff() {
-        if (this.getStatus()) {
-            this.setStatus(false)
-
-            this.#calcConsumption();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    isLightOn() {
-        return this.getStatus();
-    }
-
-    #calcConsumption() {
-        let hToM = Clock.global.hh * 60;
-        let end_time = hToM + Clock.global.mm;
-        let elapsed_time = end_time - this.start_time;
-
-        this.total_consumption += (elapsed_time / 60) * this.consumption;
-    }
-}
+const Device = require('./Device');
+const Clock = require('../../../utils/Clock');
 
 class Thermostat extends Device {
     #programs = ['Winter', 'Spring', 'Summer', 'Autumn'];
@@ -187,4 +104,4 @@ class Thermostat extends Device {
     }
 }
 
-module.exports = {Light, Thermostat}
+module.exports = Thermostat;
