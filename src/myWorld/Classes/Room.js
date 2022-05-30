@@ -1,11 +1,15 @@
-const Device = require('./Device');
+const Light = require('./Devices/Light');
+const Thermostat = require('./Devices/Thermostat');
+const VacuumCleaner = require('./Devices/VacuumCleaner');
 
 class Room {
-    constructor (name, level, in_people_nr, doors_to, devices) {
+    constructor (name, level, doors_to, clean, type, devices) {
         this.name = name;
         this.level = level;
-        this.in_people_nr = in_people_nr;
+        this.in_people_nr = 0;
         this.doors_to = doors_to;
+        this.clean = clean;
+        this.type = type;
 
         this.devices = new Object();
         this.#generateDeviceList(devices);
@@ -39,7 +43,7 @@ class Room {
                 if (devicesData[j].name == devices[i]) {
                     if (devicesData[j].name == 'light') {
                         this.devices[devicesData[j].name] = 
-                            new Device.Light(
+                            new Light(
                                 devicesData[j].name,
                                 devicesData[j].status,
                                 devicesData[j].movable,
@@ -47,14 +51,22 @@ class Room {
                     }
                     else if (devicesData[j].name == 'thermostat') {
                         this.devices[devicesData[j].name] = 
-                            new Device.Thermostat(
+                            new Thermostat(
                                 devicesData[j].name,
                                 devicesData[j].status,
                                 devicesData[j].movable,
                                 devicesData[j].consumption,
                                 devicesData[j].temperature,
                                 devicesData[j].work_program);
-                    }        
+                    }
+                    else if (devicesData[j].name == 'vacuumCleaner') {
+                        new VacuumCleaner(
+                            devicesData[j].name,
+                            devicesData[j].status,
+                            devicesData[j].movable,
+                            devicesData[j].consumption,
+                            this.name);
+                    }
                     break;
                 }
             }
@@ -76,12 +88,10 @@ class Room {
     }
 
     getDevice(device) {
-        for (let d in this.devices)
-            if (this.devices[d].getName() == device) {
-                return this.devices[d];
-            }
+        if (this.devices[device])
+            return this.devices[device];
 
-        return '';
+        return new Object();
     }
 
     moveDeviceTo (device, to) {
@@ -108,7 +118,19 @@ class Room {
 
     decreasePeopleNr() {
         --this.in_people_nr;
-    } 
+    }
+
+    setClean(clean) {
+        this.clean = clean;
+    }
+
+    getClean() {
+        return this.clean;
+    }
+
+    getType() {
+        return this.type;
+    }
 }
 
 module.exports = Room;
