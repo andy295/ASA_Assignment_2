@@ -1,6 +1,6 @@
 const Agent = require('../../bdi/Agent')
 const pddlActionIntention = require('../../pddl/actions/pddlActionIntention')
-const GlobalUtilities = require('../../utils/GlobalUtilities');
+const GlobalUtilities = require('../Utilities/GlobalUtilities');
 
 class HouseAction {
 	constructor (agent, parameters) {
