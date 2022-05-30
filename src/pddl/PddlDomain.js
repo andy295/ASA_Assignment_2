@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-
+const padding = ' '.repeat(4)
 
 class PddlDomain {
     
@@ -44,16 +44,11 @@ class PddlDomain {
                 return `
         (:action ${actionClass.name}
             :parameters (${parameters.map( p => '?'+p ).join(' ')})
-            :precondition (and ${precondition.map( p => '('+p[0]+' ' + p.slice(1).map( v => '?'+v ).join(' ') + ')').join(' ')} )
+            :precondition (and
+            ${PddlDomain.mapTokens(precondition)}
+            )
             :effect (and
-                ${effect.map( p => {
-                    let not = p[0].split(' ')[0]=='not'
-                    let predicate = (not ? p[0].split(' ')[1] : p[0])
-                    let args = p.slice(1).map( v => '?'+v ).join(' ')
-                    if (not)
-                        return '(not (' + predicate + ' ' + args + '))'
-                    return '(' + predicate + ' ' + args + ')'
-                }).join('\n\t\t\t')}
+            ${PddlDomain.mapTokens(effect)}
             )
         )`
             }
@@ -61,23 +56,24 @@ class PddlDomain {
         }
     }
 
-    saveToFile () {
+    static mapTokens(tokens) {
+        return tokens.map( p => {
+            let not = p[0].split(' ')[0]=='not'
+            let predicate = (not ? p[0].split(' ')[1] : p[0])
+            let args = p.slice(1).map( v => '?'+v ).join(' ')
+            if (not)
+                return `${padding}(not (${predicate} ${args}))`
+            return `${padding}(${predicate} ${args})`
+        }).join('\n' + padding.repeat(3))
+    }
 
-        const content = `\
-;; domain file: domain-${this.name}.pddl
-(define (domain ${this.name})
-    (:requirements :strips)
-    (:predicates
-        ${this.predicates.map( p => p.toPddlString()).join('\n\t\t')}              
-    )
-    ${this.actions.map( a => a.toPddlString()).join('\n\t\t') }
-)`
+    saveToFile () {
 
         var path = './tmp/domain-'+this.name+'.pddl'
         
         return new Promise( (res, rej) => {
 
-            fs.writeFile(path, content, err => {
+            fs.writeFile(path, this.content, err => {
                 if (err)
                     rej(err)
                 else // console.log("File written successfully");
@@ -86,6 +82,18 @@ class PddlDomain {
 
         })
 
+    }
+
+    get content() {
+        return `\
+;; domain file: domain-${this.name}.pddl
+(define (domain ${this.name})
+    (:requirements :strips)
+    (:predicates
+        ${this.predicates.map( p => p.toPddlString()).join('\n' + padding.repeat(2))}              
+    )
+    ${this.actions.map( a => a.toPddlString()).join('\n' + padding.repeat(2)) }
+)`
     }
 
 }
