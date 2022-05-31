@@ -3,7 +3,7 @@
 		"name":"entrance",
 		"level":0,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":25,
 		"doors_to": 
 		[
@@ -26,7 +26,7 @@
 		"name":"kitchen",
 		"level":0,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":45,
 		"doors_to": 
 		[
@@ -50,7 +50,7 @@
 		"name":"pantry",
 		"level":0,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":15,
 		"doors_to": 
 		[
@@ -70,7 +70,7 @@
 		"name":"living_room",
 		"level":0,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":35,
 		"doors_to": 
 		[
@@ -91,7 +91,7 @@
 		"name":"gf_bathroom",
 		"level":0,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":20,
 		"doors_to": 
 		[
@@ -110,7 +110,7 @@
 		"name":"garage",
 		"level":0,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":25,
 		"doors_to": 
 		[
@@ -131,7 +131,7 @@
 		"name":"l_first_floor",
 		"level":1,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":20,
 		"doors_to": 
 		[
@@ -154,7 +154,7 @@
 		"name":"study",
 		"level":1,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":25,
 		"doors_to": 
 		[
@@ -175,7 +175,7 @@
 		"name":"ff_bathroom",
 		"level":1,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":30,
 		"doors_to": 
 		[
@@ -197,7 +197,7 @@
 		"name":"laundry",
 		"level":1,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":20,
 		"doors_to": 
 		[
@@ -221,7 +221,7 @@
 		"name":"bedroom", 
 		"level":1,
 		"type":"room",
-		"clean": true,
+		"cleanable": true,
 		"clean_time":35,
 		"doors_to": 
 		[
@@ -241,7 +241,7 @@
 		"name":"balcony", 
 		"level":1,
 		"type":"extern",
-		"clean": true,
+		"cleanable": false,
 		"clean_time":0,
 		"doors_to": 
 		[
@@ -256,7 +256,7 @@
 		"name":"outside", 
 		"level":0,
 		"type":"extern",
-		"clean": true,
+		"cleanable": false,
 		"clean_time":0,
 		"doors_to": 
 		[

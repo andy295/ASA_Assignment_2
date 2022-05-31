@@ -1,15 +1,20 @@
+const GlobalUtilities = require('../Utilities/GlobalUtilities');
+const Observable = require('../../utils/Observable');
 const Light = require('./Devices/Light');
 const Thermostat = require('./Devices/Thermostat');
 const VacuumCleaner = require('./Devices/VacuumCleaner');
 
-class Room {
-    constructor (name, level, doors_to, clean, type, devices) {
+class Room extends Observable {
+    constructor (name, level, doors_to, cleanable, type, devices) {
+        super({name: name})
         this.name = name;
         this.level = level;
         this.in_people_nr = 0;
         this.doors_to = doors_to;
-        this.clean = clean;
+        this.cleanable = cleanable;
         this.type = type;
+
+        this.set('clean', true);
 
         this.devices = {};
         this.#generateDeviceList(devices);
@@ -130,6 +135,14 @@ class Room {
 
     getType() {
         return this.type;
+    }
+
+    getCleanable() {
+        return this.cleanable;
+    }
+
+    updateClean() {
+        this.clean = GlobalUtilities.generateRandomValue(0, 1);
     }
 }
 

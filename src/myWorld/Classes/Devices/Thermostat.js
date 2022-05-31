@@ -1,3 +1,4 @@
+const GlobalUtilities = require('../../Utilities/GlobalUtilities');
 const Device = require('./Device');
 const Clock = require('../../../utils/Clock');
 
@@ -54,13 +55,7 @@ class Thermostat extends Device {
     }
 
     updateTemperature() {
-        this.temperature = this.#generateTemperature(18, 25);
-    }
-
-    #generateTemperature(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        this.temperature = GlobalUtilities.generateRandomValue(18, 25);
     }
 
     switchCCSystemOn() {

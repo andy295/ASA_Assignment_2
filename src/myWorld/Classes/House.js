@@ -27,7 +27,7 @@ class House {
                 new Room(room.name,
                     room.level,
                     doors_to,
-                    room.clean,
+                    room.cleanable,
                     room.type,
                     devices);
 
