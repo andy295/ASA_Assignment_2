@@ -1,6 +1,8 @@
 const Agent = require('../../bdi/Agent')
 const pddlActionIntention = require('../../pddl/actions/pddlActionIntention')
 const Room = require('../Classes/Room');
+const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require('../../utils/Communicator');
+
 
 // vacuum cleaner actions
 
@@ -54,6 +56,9 @@ class VacuumCleanerAgent extends Agent {
 
         let {OnlinePlanning} = require('../../pddl/OnlinePlanner')([Move, Clean]);
         this.intentions.push(OnlinePlanning);
+
+        this.intentions.push(PostmanAcceptAllRequest)
+        this.postSubGoal(new Postman())
 	}
 
     #setCleanTime() {

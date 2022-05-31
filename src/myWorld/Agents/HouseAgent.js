@@ -1,6 +1,7 @@
 const Agent = require('../../bdi/Agent')
 const pddlActionIntention = require('../../pddl/actions/pddlActionIntention')
 const GlobalUtilities = require('../Utilities/GlobalUtilities');
+const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require('../../utils/Communicator');
 
 class HouseAction {
 	constructor (agent, parameters) {
@@ -74,6 +75,9 @@ class HouseClean extends HouseAction {
 class HouseAgent extends Agent {
 	constructor(name) {
 		super(name);
+
+        this.intentions.push(PostmanAcceptAllRequest)
+        this.postSubGoal(new Postman())
 
 		this.#AddAction();
 	}
