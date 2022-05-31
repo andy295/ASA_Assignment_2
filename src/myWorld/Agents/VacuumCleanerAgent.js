@@ -3,7 +3,6 @@ const pddlActionIntention = require('../../pddl/actions/pddlActionIntention')
 const Room = require('../Classes/Room');
 const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require('../../utils/Communicator');
 
-
 // vacuum cleaner actions
 
 class Move extends pddlActionIntention {
