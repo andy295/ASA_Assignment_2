@@ -44,8 +44,8 @@ function setup (intentions = []) {
                 return res;
             })
             
-            console.log(res);
-            console.log(res.result.plan);
+            // console.log(res);
+            // console.log(res.result.plan);
 
             if (!res.result.plan && res.result.output.split('\n')[0] != ' --- OK.') {
                 this.log('No plan found')
