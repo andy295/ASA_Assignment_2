@@ -1,3 +1,5 @@
+const Goal = require('../bdi/Goal');
+const Intention = require('../bdi/Intention');
 const Observable =  require('./Observable');
 
 class MessageDispatcher extends Observable {

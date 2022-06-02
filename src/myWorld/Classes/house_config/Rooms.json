@@ -63,7 +63,7 @@
 			"camera",
 			"door",
 			"roll_up_shtr",
-			"vacuum_cleaner"
+			"vacuumCleaner"
 		]
 	},
 	{
@@ -213,7 +213,7 @@
 			"roll_up_shtr",
 			"tumble_dryer",
 			"washing_machine",
-			"vacuum_cleaner",
+			"vacuumCleaner",
 			"roll_up_shtr_door"
 		]
 	},

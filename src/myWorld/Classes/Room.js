@@ -41,40 +41,45 @@ class Room extends Observable {
     }
 
     #generateDeviceList(devices) {
+        
         const devicesData = require('./house_config/Devices.json');
-         for (const device of devices) {
-            for(const deviceData of devicesData)
-            {
-                if (deviceData.name == device) {
-                    if (deviceData.name == 'light') {
-                        this.devices[deviceData.name] = 
-                            new Light(
-                                deviceData.name,
-                                deviceData.status,
-                                deviceData.movable,
-                                deviceData.consumption);   
-                    }
-                    else if (deviceData.name == 'thermostat') {
-                        this.devices[deviceData.name] = 
-                            new Thermostat(
-                                deviceData.name,
-                                deviceData.status,
-                                deviceData.movable,
-                                deviceData.consumption,
-                                deviceData.temperature,
-                                deviceData.work_program);
-                    }
-                    else if (deviceData.name == 'vacuumCleaner') {
-                        new VacuumCleaner(
-                            deviceData.name,
-                            deviceData.status,
-                            deviceData.movable,
-                            deviceData.consumption,
-                            this.name);
-                    }
-                    break;
-                }
-            }
+        let cases = [];
+        for(let i = 0; i < devicesData.length; i++) {
+            cases[i] = devicesData[i].name; 
+        }
+
+        for (const device of devices) {
+            switch(device) {
+                case cases[0]:
+                    this.devices[devicesData[0].name] = 
+                        new Light(
+                            devicesData[0].name,
+                            devicesData[0].status,
+                            devicesData[0].movable,
+                            devicesData[0].consumption);   
+                break;
+                case cases[1]:
+                    this.devices[devicesData[1].name] = 
+                    new Thermostat(
+                        devicesData[1].name,
+                        devicesData[1].status,
+                        devicesData[1].movable,
+                        devicesData[1].consumption,
+                        devicesData[1].temperature,
+                        devicesData[1].work_program);
+                break;
+                case cases[2]:
+                    this.devices[devicesData[2].name] =
+                    new VacuumCleaner(
+                        devicesData[2].name,
+                        devicesData[2].status,
+                        devicesData[2].movable,
+                        devicesData[2].consumption,
+                        this.name);
+                break;
+                default:
+                    break; 
+            } 
         }
     }
 
@@ -129,7 +134,7 @@ class Room extends Observable {
         this.clean = clean;
     }
 
-    getClean() {
+    isClean() {
         return this.clean;
     }
 
@@ -137,7 +142,7 @@ class Room extends Observable {
         return this.type;
     }
 
-    getCleanable() {
+    isCleanable() {
         return this.cleanable;
     }
 

@@ -18,6 +18,13 @@ class GlobalUtility {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
+    static isEmptyObj(obj) {
+        if (Object.keys(obj).length === 0)
+            return true;
+        
+            return false;
+    }
 }
 
 module.exports = GlobalUtility;

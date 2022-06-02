@@ -1,16 +1,20 @@
+const GlobalUtilities = require('../Utilities/GlobalUtilities');
 const Person = require('./Person');
 const Room = require('./Room');
 
 class House {
-    constructor (houseAgent) {
+
+    constructor (houseAgent, deviceAgents) {
+
         this.rooms = {};
-        this.#initRooms(houseAgent);
+        this.#initRooms(houseAgent, deviceAgents);
 
         this.people = {};
         this.#initPeople(houseAgent)
     }
+    
+     #initRooms(houseAgent, deviceAgents) {
 
-    #initRooms(houseAgent) {
         const roomsData = require('./house_config/Rooms.json');
         for (const room of roomsData) {
 
@@ -33,14 +37,8 @@ class House {
 
             // create beliefs for the house agent
             houseAgent.beliefs.declare('is_' + room.type +
-                ' ' + room.name +
-                ' ' + room.level);
-
-            if (room.clean)
-                houseAgent.beliefs.declare('clean ' + room.name);
-            else
-                houseAgent.beliefs.declare('dirty ' + room.name);
-            
+                ' ' + room.name);
+         
             for (const to of doors_to) {
                 // console.log('connected ' +
                 // room.name +
@@ -51,20 +49,46 @@ class House {
                 ' ' + to);
             }
 
-            if (devices.includes('vacuum_cleaner')) {
-                if (room.level == 0) {
-                    houseAgent.beliefs.declare('in gfvc ' + room.name);
-                    houseAgent.beliefs.declare('is_robot gfvc');
+            this.#setCleaning(room, houseAgent, deviceAgents);
+        }
+    }
+
+    #setCleaning(room, houseAgent, deviceAgents) {
+
+        if (room.cleanable) {
+            if (this.rooms[room.name].isClean())
+                houseAgent.beliefs.declare('clean ' + room.name);
+            else
+                houseAgent.beliefs.declare('dirty ' + room.name);
+
+            for (const deviceAgent of deviceAgents) {
+                if (deviceAgent.getType() == 'vacuumCleaner' && 
+                    deviceAgent.getOperationLevel() == room.level) {
+                    deviceAgent.setCleanTime(room);
+                    break;
                 }
-                else {
-                    houseAgent.beliefs.declare('in ffvc ' + room.name);
-                    houseAgent.beliefs.declare('is_robot ffvc');
+            }
+        }
+
+        if (room.devices.includes('vacuumCleaner')) {
+            for (const deviceAgent of deviceAgents) {
+  
+                if (deviceAgent.getType() == 'vacuumCleaner' && 
+                    deviceAgent.getOperationLevel() == room.level) {
+
+                    deviceAgent.setDevice(this.rooms[room.name].getDevice(deviceAgent.getType()));
+                    if(!GlobalUtilities.isEmptyObj(deviceAgent.getDevice())) {
+                        houseAgent.beliefs.declare('in ' + deviceAgent.getName() + ' ' + room.name);
+                        houseAgent.beliefs.declare('is_robot '+ deviceAgent.getName());
+                        break;
+                    }
                 }
             }
         }
     }
 
     #initPeople(houseAgent) {
+        
         const peopleData = require('./house_config/People.json'); 
         for (const person of peopleData) {   
             this.people[person.name] = 
