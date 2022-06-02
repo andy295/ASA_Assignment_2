@@ -1,5 +1,6 @@
 const Observable =  require('./Observable');
 const {DaysEnum, MonthsEnum} = require('../myWorld/Utilities/Calendar');
+const readline = require('readline');
 
 /**
  * @static {global} is the global time
@@ -51,14 +52,11 @@ class Clock {
 
             if (dd < 7) {
                 // Here, time is logged immediately before any other observable gets updated!
-                process.stdout.clearLine(0);
-                process.stdout.cursorTo(0);
+                readline.cursorTo(process.stdout, 0);
                 process.stdout.write(Clock.format() + '\t');
             }
-            else {
-                process.stdout.clearLine(0);
-                process.stdout.cursorTo(0);
-            }
+            else
+                readline.cursorTo(process.stdout, 0);
         }
     }
 }
