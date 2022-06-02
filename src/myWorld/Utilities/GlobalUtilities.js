@@ -5,7 +5,7 @@ class GlobalUtility {
         if (matches)
             return parseInt(matches[0], 10);
 
-        return 0;
+        return nAn;
     }
 
     static actionTimeMs(min) {
