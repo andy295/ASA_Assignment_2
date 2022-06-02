@@ -69,7 +69,11 @@ class PddlDomain {
 
     saveToFile () {
 
-        var path = './tmp/domain-'+this.name+'.pddl'
+        const folderName = './pddlData';
+        if (!fs.existsSync(folderName))
+            fs.mkdirSync(folderName);
+
+        var path = folderName + '/domain-'+this.name+'.pddl'
         
         return new Promise( (res, rej) => {
 

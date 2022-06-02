@@ -36,7 +36,12 @@ class PddlProblem {
     }
 
     saveToFile () {
-        var path = './tmp/problem-'+this.name+'.pddl'
+
+        const folderName = './pddlData';
+        if (!fs.existsSync(folderName))
+            fs.mkdirSync(folderName);
+
+        var path = folderName + '/problem-'+this.name+'.pddl'
         
         return new Promise( (res, rej) => {
 
