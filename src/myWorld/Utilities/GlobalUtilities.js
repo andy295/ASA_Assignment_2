@@ -19,11 +19,11 @@ class GlobalUtility {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    static isEmptyObj(obj) {
+    static isValidObj(obj) {
         if (Object.keys(obj).length === 0)
-            return true;
-        
             return false;
+        
+            return true;
     }
 }
 

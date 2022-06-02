@@ -77,7 +77,7 @@ class House {
                     deviceAgent.getOperationLevel() == room.level) {
 
                     deviceAgent.setDevice(this.rooms[room.name].getDevice(deviceAgent.getType()));
-                    if(!GlobalUtilities.isEmptyObj(deviceAgent.getDevice())) {
+                    if(GlobalUtilities.isValidObj(deviceAgent.getDevice())) {
                         houseAgent.beliefs.declare('in ' + deviceAgent.getName() + ' ' + room.name);
                         houseAgent.beliefs.declare('is_robot '+ deviceAgent.getName());
                         break;
