@@ -1,6 +1,8 @@
 const GlobalUtilities = require('../Utilities/GlobalUtilities');
 const Person = require('./Person');
 const Room = require('./Room');
+const houseAgent = require('../Agents/House/HouseAgent');
+const vacuumCleanerAgents = require('../Agents/VacuumCleaner/VacuumCleanerAgent');
 
 class House {
 
@@ -142,4 +144,6 @@ class House {
     }
 }
 
-module.exports = House;
+const house = new House(houseAgent, vacuumCleanerAgents);
+
+module.exports = house;

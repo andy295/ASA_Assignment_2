@@ -7,14 +7,44 @@ class VacuumCleaner extends Device {
 
         this.set('clean', false);
 
+        this.goal = [];
+
         // consumption => kW/h
     }
 
-    Move(room) { 
+    move(room) { 
 	    if (this.location != room) {
 			this.position = room; 
 		}
 	}
+
+    updateGoal(goal) {
+        this.goal.push(goal);
+    }
+
+    getGoal() {
+        return this.goal;
+    }
+
+    hasGoal() {
+        return (this.goal.length > 0);
+    }
+
+    resetGoal() {
+        this.goal = [];
+    }
+
+    setClean(value) {
+        this.clean = value;
+    }
+
+    getClean() {
+        return this.clean;
+    }
+
+    getLocation() {
+        return this.location;
+    }
 }
 
 module.exports = VacuumCleaner;
