@@ -1,6 +1,7 @@
 const Goal = require('./Goal');
 const Agent = require('./Agent');
 const keypress = require('../utils/keypress')
+const logger = require('../myWorld/Utilities/Logger')
 
 var nextId = 0
 
@@ -22,11 +23,13 @@ class Intention {
     log (...args) {
         let header = this.agent.name+'>'+this.constructor.name+'#'+this.id
         this.agent.headerLog(header, ...args) //this.goal.constructor.name+'['+this.goal.id+']'+'>'
+        logger.trace(header, ...args)
     }
 
     error (...args) {
         let header = this.agent.name+'>'+this.constructor.name+'#'+this.id
         this.agent.headerError(header, ...args)
+        logger.error(header, ...args)
     }
 
 

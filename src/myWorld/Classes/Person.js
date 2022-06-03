@@ -11,12 +11,12 @@ class Person extends Observable {
 
     moveTo (to) {
         if (!this.house.roomExists(to)) {
-            console.log(to + ' is not a valid room');
+            this.error(to + ' is not a valid room');
             return false;
         }
 
         if (to == this.in_room) {
-            console.log(this.name + ' is already in room ' + this.in_room);
+            this.error(this.name + ' is already in room ' + this.in_room);
             return false;
         }
 

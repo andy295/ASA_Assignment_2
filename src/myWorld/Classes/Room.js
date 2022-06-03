@@ -107,19 +107,23 @@ class Room extends Observable {
     moveDeviceTo (device, to) {
         let idx = this.getDevice(device);
         if (idx == -1) {
-            console.log(device + ' is not in ' + this.name);
+            this.error(device + ' is not in ' + this.name);
             return false;
         }
 
         if (!devices[idx].movable) {
-            console.log(device + ' cannot be removed from ' + this.name);
+            this.error(device + ' cannot be removed from ' + this.name);
             return false;
         }
         
         let dev = this.#removeDevice(idx);
         to.addDevice(dev);
-        console.log(device + ' moved from ' + this.name + ' to ' + to.name);
+        this.error(device + ' moved from ' + this.name + ' to ' + to.name);
         return true;
+    }
+
+    getInPeopleNr() {
+        return this.in_people_nr; 
     }
 
     increasePeopleNr() {
@@ -130,8 +134,8 @@ class Room extends Observable {
         --this.in_people_nr;
     }
 
-    setClean(clean) {
-        this.clean = clean;
+    setClean(v) {
+        this.clean = v;
     }
 
     isClean() {
@@ -147,7 +151,9 @@ class Room extends Observable {
     }
 
     updateClean() {
-        this.clean = GlobalUtilities.generateRandomValue(0, 1);
+        this.clean = 
+        GlobalUtilities.generateRandomValue(0, 1) ?
+            true : false;
     }
 }
 

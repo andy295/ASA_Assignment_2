@@ -50,7 +50,7 @@ class PostmanAcceptAllRequest extends Intention {
             let newMessage = myMessageDispatcher.readMessage()
             if (newMessage && newMessage instanceof Goal) {
                 this.log('Reading received message', newMessage.toString())
-                console.log(newMessage)
+                // console.log(newMessage)
                 yield this.agent.postSubGoal(newMessage)
             }
         }
