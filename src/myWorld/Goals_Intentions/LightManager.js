@@ -3,18 +3,14 @@ const Intention = require('../../bdi/Intention');
 const Light = require('../Classes/Devices/Light');
 const Clock = require('../../utils/Clock');
 
-// how can I merge the following six classes in just two (goal and intention) ?
 
 class ManageLightsGoal extends Goal {
 
-    constructor (rooms = [], hh_from = 6, hh_to = 23) {
+    constructor (rooms = []) {
         super()
 
         /** @type {Array<Room>} */
         this.rooms = rooms;
-
-        this.hh_from = hh_from;
-        this.hh_to = hh_to;
     }
 }
 
@@ -25,17 +21,15 @@ class ManageLightsIntention extends Intention {
         
         /** @type {Array<Room>} */
         this.rooms = this.goal.rooms;
-
-        this.hh_from = this.goal.hh_from;
-        this.hh_to = this.goal.hh_to;
     }
     
     static applicable (goal) {
         return goal instanceof ManageLightsGoal;
     }
 
-    lightNeeded() {
-        if (Clock.global.hh >= this.hh_from && Clock.global.hh < this.hh_to)
+    lightNeeded(lightTiming) {
+        if (Clock.global.hh < lightTiming.getToHH() ||
+            Clock.global.hh > lightTiming.getFromHH())
             return true;
 
         return false;
@@ -46,22 +40,25 @@ class ManageLightsIntention extends Intention {
 
         for (let [key_t, room] of Object.entries(this.rooms)) {
             if (room.devices.light) {
+
                 let lightGoalPromise = new Promise( async res => {
                     while (true) {
-                        let status = await this.agent.beliefs.notifyChange('people_in_' + room.name);
-                        if (this.lightNeeded()) {
-                            if (status) {
-                                room.devices.light.switchLightOn();
-                                this.agent.beliefs.declare(room.name + ' light_on');
-                            }
-                            else {
-                                room.devices.light.switchLightOff();
-                                this.agent.beliefs.undeclare(room.name + ' light_on');
-                            }
+
+                        let status = await this.agent.beliefs.notifyChange('people_in_' + room.name) ||
+                            this.agent.beliefs.notifyChange('wake_up people');
+                        
+                        if (this.lightNeeded(this.agent.lightTiming) && 
+                            this.agent.beliefs.check('wake_up people') && 
+                            this.agent.beliefs.check('people_in_' + room.name)) {
+
+                            room.devices.light.switchLightOn() ?
+                            this.agent.beliefs.declare(room.name + ' light_on') :
+                            null;
                         }
                         else {
-                            room.devices.light.switchLightOff();
-                            this.agent.beliefs.undeclare(room.name + ' light_on');
+                            room.devices.light.switchLightOff() ?
+                            this.agent.beliefs.undeclare(room.name + ' light_on') :
+                            null;
                         }
                     }
                 });
@@ -74,114 +71,60 @@ class ManageLightsIntention extends Intention {
     }
 }
 
-// how can a goal be executed just one time per day every day
-// without continue to catch the notifyChange after it has been completed?
-// the following code doesn't work
+class AutoTurnLightOnOffGoal extends Goal {
 
-class AutoTurnLightOffGoal extends Goal {
-
-    constructor (rooms = [], hh = 7, mm = 0) {
+    constructor (rooms = []) {
         super()
 
         /** @type {Array<Room>} */
         this.rooms = rooms;
-
-        this.hh = hh;
-        this.mm = mm;
     }
 }
 
-class AutoTurnLightOffIntention extends Intention {
+class AutoTurnLightOnOffIntention extends Intention {
     
     constructor (agent, goal) {
         super(agent, goal);
         
         /** @type {Array<Room>} */
         this.rooms = this.goal.rooms;
-
-        this.hh = this.goal.hh;
-        this.mm = this.goal.mm;
     }
     
     static applicable (goal) {
-        return goal instanceof AutoTurnLightOffGoal;
+        return goal instanceof AutoTurnLightOnOffGoal;
     }
 
     *exec () {
-        var lightsOffGoals = [];
-        
-        let lightOffGoalPromise = new Promise( async res => {
+        var lightsOnOffGoals = [];
+        let lightOnOffGoalPromise = new Promise( async res => {
+
             while (true) {
-                let status = await Clock.global.notifyChange('mm');
-                    if (Clock.global.hh > this.hh && Clock.global.mm > this.mm) {
-                        for (let [key_t, room] of Object.entries(this.rooms)) {
-                            if (room.devices.light) {
-                                if (room.devices.light.isLightOn()) {
-                                    room.devices.light.switchLightOff(); 
-                                    this.agent.beliefs.undeclare(room.name + ' light_on');
-                                }
-                            }
+                let status = await this.agent.beliefs.notifyChange('need light');
+
+                if (status) {
+                    for (let [key_t, room] of Object.entries(this.rooms)) {
+                        if (room.devices.light) {
+                            if (room.getInPeopleNr() > 0)
+                                room.devices.light.switchLightOn() ? 
+                                    this.agent.beliefs.declare(room.name + ' light_on') :
+                                    null;
                         }
                     }
                 }
-            });
-
-            lightsOffGoals.push(lightOffGoalPromise);
-
-        yield Promise.all(lightsOffGoals)
-    }
-}
-
-class AutoTurnLightOnGoal extends Goal {
-
-    constructor (rooms = [], hh = 7, mm = 0) {
-        super()
-
-        /** @type {Array<Room>} */
-        this.rooms = rooms;
-
-        this.hh = hh;
-        this.mm = mm;
-    }
-}
-
-class AutoTurnLightOnIntention extends Intention {
-    
-    constructor (agent, goal) {
-        super(agent, goal);
-        
-        /** @type {Array<Room>} */
-        this.rooms = this.goal.rooms;
-
-        this.hh = this.goal.hh;
-        this.mm = this.goal.mm;
-    }
-    
-    static applicable (goal) {
-        return goal instanceof AutoTurnLightOnGoal;
-    }
-
-    *exec () {
-        var lightsGoals = [];
-        
-        for (let [key_t, room] of Object.entries(this.rooms)) {
-            let lightOnGoalPromise = new Promise( async res => {
-                while (true) {
-                    let status = await Clock.global.notifyChange('hh');
-                    if (Clock.global.hh == 20 && Clock.global.mm == 0) {
-                        if (room.in_people_nr > 0 && room.devices.light && !room.devices.light.isLightOn()) {
-                            room.devices.light.switchLightOn(); 
-                            this.agent.beliefs.declare(room.name + ' light_on');
+                else {
+                    for (let [key_t, room] of Object.entries(this.rooms)) {
+                        if (room.devices.light) {
+                            room.devices.light.switchLightOff() ? 
+                                this.agent.beliefs.undeclare(room.name + ' light_on') :
+                                null;
                         }
                     }
                 }
-            });
-        
-            lightsGoals.push(lightOnGoalPromise);
-        }
+           }
+       });
 
-        yield Promise.all(lightsGoals)
+        lightsOnOffGoals.push(lightOnOffGoalPromise);
     }
 }
 
-module.exports = {ManageLightsGoal, ManageLightsIntention, AutoTurnLightOffGoal, AutoTurnLightOffIntention, AutoTurnLightOnGoal, AutoTurnLightOnIntention}
+module.exports = {ManageLightsGoal, ManageLightsIntention, AutoTurnLightOnOffGoal, AutoTurnLightOnOffIntention}
