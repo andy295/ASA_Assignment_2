@@ -30,8 +30,9 @@ class VacuumCleanerIntention extends Intention {
                 if (device.getClean())
                 {
 
-                    console.log('floor ' + this.agent.getOperationLevel() + 
-                        ' needs to be cleaned');
+                    // enable it if you need more traces
+                    // this.log('floor ' + this.agent.getOperationLevel() + 
+                    //     ' needs to be cleaned');
                     
                     this.agent.clean(device.getGoal());
                     
