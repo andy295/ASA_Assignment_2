@@ -20,16 +20,15 @@ class VacuumCleanerIntention extends Intention {
     }
 
     *exec () {
-
         var cleanlinessGoal = [];
         let cleanGoalPromise = new Promise( async res => {
-            while (true) {
 
+            while (true) {
                 let device = this.agent.getDevice();
                 let needToClean = await device.notifyChange('clean');
+
                 if (device.getClean())
                 {
-
                     // enable it if you need more traces
                     // this.log('floor ' + this.agent.getOperationLevel() + 
                     //     ' needs to be cleaned');
@@ -37,6 +36,7 @@ class VacuumCleanerIntention extends Intention {
                     this.agent.clean(device.getGoal());
                     
                     device.resetGoal();
+                    device.resetClean();
                 }
             }
         });

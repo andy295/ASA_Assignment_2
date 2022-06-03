@@ -1,5 +1,6 @@
 const Goal = require('../../bdi/Goal');
 const Intention = require('../../bdi/Intention');
+const Room = require('../Classes/Room');
 const Light = require('../Classes/Devices/Light');
 const Thermostat = require('../Classes/Devices/Thermostat');
 const Clock = require('../../utils/Clock');

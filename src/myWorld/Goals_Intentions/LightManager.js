@@ -27,9 +27,9 @@ class ManageLightsIntention extends Intention {
         return goal instanceof ManageLightsGoal;
     }
 
-    lightNeeded(lightTiming) {
-        if (Clock.global.hh < lightTiming.getToHH() ||
-            Clock.global.hh > lightTiming.getFromHH())
+    lightNeeded(lightTime) {
+        if (Clock.global.hh < lightTime.getHH() ||
+            Clock.global.hh > lightTime.getFromHH())
             return true;
 
         return false;
@@ -47,7 +47,7 @@ class ManageLightsIntention extends Intention {
                         let status = await this.agent.beliefs.notifyChange('people_in_' + room.name) ||
                             this.agent.beliefs.notifyChange('wake_up people');
                         
-                        if (this.lightNeeded(this.agent.lightTiming) && 
+                        if (this.lightNeeded(this.agent.lightTime) && 
                             this.agent.beliefs.check('wake_up people') && 
                             this.agent.beliefs.check('people_in_' + room.name)) {
 

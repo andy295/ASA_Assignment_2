@@ -25,16 +25,6 @@ class ManageHouseIntention extends Intention {
         return goal instanceof ManageHouseGoal;
     }
 
-    turnOnAlarmClock(alarmClock) {
-
-        if (Clock.global.dd == this.dd && 
-            Clock.global.hh == alarmClock.getHH() && 
-            Clock.global.mm == alarmClock.getMM())
-            return true;
-        
-        return false;
-    }
-
     setNextAlarm(hh, mm) {
         let nextDay = Clock.global.dd + 1;
         this.dd = nextDay;
@@ -66,17 +56,6 @@ class ManageHouseIntention extends Intention {
         }
     }
 
-    lightNeeded(lightTiming) {
-        let timeMin =  (Clock.global.hh * 60) + Clock.global.mm;
-        let fromTimeMin = (lightTiming.getFromHH() * 60) + lightTiming.getFromMM();
-        let toTimeMin = (lightTiming.getToHH() * 60) + lightTiming.getToMM();
-
-        if ((timeMin <= toTimeMin) || (timeMin >= fromTimeMin))
-            return true;
-
-        return false;
-    }
-
     checkTime(kind, objTime) {
         
         switch(kind) {
@@ -89,7 +68,7 @@ class ManageHouseIntention extends Intention {
             case 1:
                 let timeMin =  (Clock.global.hh * 60) + Clock.global.mm;
                 let fromTimeMin = (objTime.getFromHH() * 60) + objTime.getFromMM();
-                let toTimeMin = (objTime.getToHH() * 60) + objTime.getToMM();
+                let toTimeMin = (objTime.getHH() * 60) + objTime.getMM();
         
                 if ((timeMin <= toTimeMin) || (timeMin >= fromTimeMin))
                     return true;

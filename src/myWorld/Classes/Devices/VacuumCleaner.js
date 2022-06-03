@@ -34,6 +34,10 @@ class VacuumCleaner extends Device {
         this.goal = [];
     }
 
+    resetClean() {
+        this.clean = false;
+    }
+
     setClean(value) {
         this.clean = value;
     }
