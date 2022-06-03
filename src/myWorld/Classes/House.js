@@ -98,8 +98,14 @@ class House {
 
             this.rooms[person.in_room].increasePeopleNr();
 
-            if (!houseAgent.beliefs.check('people_in_' + person.in_room))
+            if (!houseAgent.beliefs.check('people_in_' + person.in_room)) {
                 houseAgent.beliefs.declare('people_in_' + person.in_room);
+
+                if (person.in_room == 'bedroom')
+                    houseAgent.beliefs.undeclare('wake_up people');
+                else
+                    houseAgent.beliefs.declare('wake_up people');
+            }
         }
     }
 
