@@ -30,32 +30,36 @@ class ManageConsumptionIntention extends Intention {
     *exec () {
         var consumptionGoals = [];
         let consumptionGoalPromise = new Promise( async res => {
+
             while (true) {
-                let status = await Clock.global.notifyChange('mm');
-                    if (Clock.global.hh == 23 && Clock.global.mm == 55) {
-                        let electricity_total_consumption = 0;
-                        for (let [key_r, room] of Object.entries(this.rooms)) {
-                            if (room.devices.light) {
-                                // console.log(room.name + ' light ' + room.devices.light.isLightOn())
-                                electricity_total_consumption += room.devices.light.getTotalConsumption();
-                                room.devices.light.resetTotalConsumption();
-                            }
+                let status = await this.agent.beliefs.notifyChange('compute consumption');
+
+                if (status) {
+                    let electricity_total_consumption = 0;
+
+                    for (let [key_r, room] of Object.entries(this.rooms)) {
+
+                        if (room.devices.light) {
+                            // console.log(room.name + ' light ' + room.devices.light.isLightOn())
+                            electricity_total_consumption += room.devices.light.getTotalConsumption();
+                            room.devices.light.resetTotalConsumption();
+                        }
                             
-                            if (room.devices.thermostat) {
-                                // console.log(room.name + ' temperature ' + room.devices.thermostat.getTemperature())
-                                electricity_total_consumption += room.devices.thermostat.getTotalConsumption();
-                                room.devices.thermostat.resetTotalConsumption();
-                            }
-                        }   
+                        if (room.devices.thermostat) {
+                            // console.log(room.name + ' temperature ' + room.devices.thermostat.getTemperature())
+                            electricity_total_consumption += room.devices.thermostat.getTotalConsumption();
+                            room.devices.thermostat.resetTotalConsumption();
+                        }
+                    }   
                     
-                        console.log('\tElectricity total consumption: ' + (Math.round(electricity_total_consumption * 100) / 100).toFixed(2));
-                    }
+                    this.log('\tElectricity total consumption: ' + (Math.round(electricity_total_consumption * 100) / 100).toFixed(2));
+
+                    this.agent.beliefs.undeclare('compute consumption');
                 }
-            });
+            }
+        });
 
-            consumptionGoals.push(consumptionGoalPromise);
-
-        yield Promise.all(consumptionGoals)
+        consumptionGoals.push(consumptionGoalPromise);
     }
 }
 
