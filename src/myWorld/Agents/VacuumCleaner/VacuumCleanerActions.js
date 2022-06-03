@@ -1,9 +1,8 @@
 const pddlActionIntention = require('../../../pddl/actions/pddlActionIntention');
 const houseAgent = require('../House/HouseAgent');
 
-class Move extends pddlActionIntention {
-    static houseAgent;
 
+class Move extends pddlActionIntention {
     static parameters = ['from', 'to'];
 
     static precondition = [
@@ -24,8 +23,6 @@ class Move extends pddlActionIntention {
 }
 
 class Clean extends pddlActionIntention {
-    static houseAgent;
-
     static parameters = ['room'];
 
     static precondition = [ ['is_room', 'room'],

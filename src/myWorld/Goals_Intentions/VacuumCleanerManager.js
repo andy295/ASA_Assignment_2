@@ -1,6 +1,7 @@
 const Goal = require('../../bdi/Goal');
 const Intention = require('../../bdi/Intention');
 
+
 class VacuumCleanerGoal extends Goal {
 
     constructor (device) {
@@ -29,7 +30,7 @@ class VacuumCleanerIntention extends Intention {
                 if (device.getClean())
                 {
 
-                    this.log('floor ' + this.agent.getOperationLevel() + 
+                    console.log('floor ' + this.agent.getOperationLevel() + 
                         ' needs to be cleaned');
                     
                     this.agent.clean(device.getGoal());

@@ -4,6 +4,7 @@ const Clock = require('../../utils/Clock');
 const Room = require('../Classes/Room');
 const VacuumCleaner  = require('../Classes/Devices/VacuumCleaner');
 
+
 class CleanlinessGoal extends Goal {
 
     constructor (rooms, devices, hh = 10) {
@@ -49,6 +50,7 @@ class CleanlinessIntention extends Intention {
                                         device.updateGoal('clean ' + room.name);
                                         this.agent.beliefs.declare('dirty ' + room.name);
                                         this.agent.beliefs.undeclare('clean ' + room.name);
+                                        break;
                                     }
                                 }
                             }
