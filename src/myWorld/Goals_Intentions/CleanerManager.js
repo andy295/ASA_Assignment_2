@@ -31,21 +31,21 @@ class CleanlinessIntention extends Intention {
     }
 
     *exec () {
-
         var cleanlinessGoal = [];
         let cleanGoalPromise = new Promise( async res => {
+
             while (true) {
+                let status = await this.agent.beliefs.notifyChange('check cleanliness');
 
-                let status = await Clock.global.notifyChange('hh');
-                if (Clock.global.hh == this.hh) {
-
+                if (status) {
                     for (let [key_t, room] of Object.entries(this.rooms)) {
-                        if (room.isCleanable()) {
 
+                        if (room.isCleanable()) {
                             room.updateClean();
+
                             if (!room.isClean()) {
-                                
                                 for (let [level, device] of Object.entries(this.devices)) {
+
                                     if (room.getLevel() == level) {
                                         device.updateGoal('clean ' + room.name);
                                         this.agent.beliefs.declare('dirty ' + room.name);
@@ -62,6 +62,8 @@ class CleanlinessIntention extends Intention {
                             device.updateGoal('in ' + device.getLocation());                            
                             device.setClean(true);
                         }
+
+                    this.agent.beliefs.undeclare('check cleanliness');
                 }
             }
         });
