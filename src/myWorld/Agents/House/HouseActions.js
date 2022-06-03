@@ -68,4 +68,15 @@ class Clean extends HouseAction {
 		['not dirty', 'room'] ];
 }
 
-module.exports = {Move, Clean}
+class TurnOffAlarmClock extends HouseAction {
+	static parameters = ['alarmClock'];
+
+	static precondition = [
+		['on', 'alarmClock'] ];
+
+	static effect = [
+		['not on', 'alarmClock'],
+		['wake_up people'] ];
+}
+
+module.exports = {Move, Clean, TurnOffAlarmClock}
