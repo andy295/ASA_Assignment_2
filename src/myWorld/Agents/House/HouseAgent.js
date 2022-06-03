@@ -12,11 +12,22 @@ class HouseAgent extends Agent {
         this.intentions.push(PostmanAcceptAllRequest)
         this.postSubGoal(new Postman())
 		
-		this.alarmClock;
+		this.alarmClock = new Object();
+		this.#createTimer(this.alarmClock);
 		this.#createAlarmClock();
 
-		this.lightTiming;
-		this.#createLight();
+		this.lightTime = new Object();
+		this.#createTimer(this.lightTime);
+		this.#createLightTime();
+
+		this.cleaningTime = new Object();
+		this.#createTimer(this.cleaningTime);
+
+		this.sleepTime = new Object();
+		this.#createTimer(this.sleepTime);
+
+		this.consumptionTime = new Object();
+		this.#createTimer(this.consumptionTime);
 
 		this.#addAction();
 	}
@@ -42,71 +53,56 @@ class HouseAgent extends Agent {
 		}
 	}
 
-	#createAlarmClock() {
-		this.alarmClock = {
-			'name': 'house alarm clock',
-			'hh': 6,
-			'mm': 30,
+	#createTimer(obj) {
+		obj.hh = 6;
+		obj.mm = 0;
 
-			'setAlarm': function(hh, mm) {
-				this.hh = hh;
-				this. mm = mm
-			},
+		obj.getHH = function() {
+			return this.hh;
+		}
 
-			'getHH': function() {
-				return this.hh;
-			},
+		obj.getMM = function() {
+			return this.mm;
+		}
 
-			'getMM' : function() {
-				return this.mm;
-			},
-
-			'getName' : function() {
-				return this.name;
-			},
-		};
+		obj.setTime = function(hh, mm) {
+			this.hh = hh;
+			this.mm = mm;
+		}
 	}
 
-	#createLight() {
-		this.lightTiming = {
-			'fromHH': 19,
-			'fromMM': 0,
-			'toHH': 8,
-			'toMM': 0,
+	#createAlarmClock() {
+		this.alarmClock.name = 'house alarm clock',
+		
+		this.alarmClock.getName = function() {
+				return this.name;
+		}
+	}
 
-			'getFromHH': function() {
-				return this.fromHH;
-			},
+	#createLightTime() {
+		this.lightTime.fromHH = 19;
+		this.lightTime.fromMM = 0;
 
-			'getFromMM' : function() {
-				return this.fromMM;
-			},
+		this.lightTime.getFromHH = function() {
+			return this.fromHH;
+		}
 
-			'getToHH': function() {
-				return this.toHH;
-			},
+		this.lightTime.getFromMM = function() {
+			return this.fromMM;
+		}
 
-			'getToMM' : function() {
-				return this.toMM;
-			},
-
-			'setTimeFrom' : function(hh, mm) {
-				this.fromHH = hh;
-				this.fromMM = mm;
-			},
-
-			'setTimeTo' : function(hh, mm) {
-				this.toHH = hh;
-				this.toMM = mm;
-			},
-		};
+		this.lightTime.setTimeFrom = function(hh, mm) {
+			this.fromHH = hh;
+			this.fromMM = mm;
+		}
 	}
 }
 
 var houseAgent = new HouseAgent('house');
 
-houseAgent.alarmClock.setAlarm(6, 30);
-houseAgent.lightTiming.setTimeFrom(21, 30);
-houseAgent.lightTiming.setTimeTo(7, 0)
+houseAgent.alarmClock.setTime(6, 30);
+houseAgent.lightTime.setTimeFrom(21, 30);
+houseAgent.lightTime.setTime(7, 0)
+houseAgent.cleaningTime.setTime(10 , 30);
 
 module.exports = houseAgent;
