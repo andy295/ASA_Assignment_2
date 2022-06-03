@@ -1,6 +1,7 @@
 const Beliefset =  require('./Beliefset')
 const Intention = require('./Intention');
 const chalk = require('chalk');
+const logger = require('../myWorld/Utilities/Logger')
 
 var nextId = 0
 const colors = ['red', 'blue', 'green', 'yellow', 'magenta', 'cyan', 'redBright', 'greenBright', 'yellowBright', 'blueBright', 'magentaBright', 'cyanBright', 'whiteBright']
@@ -32,6 +33,7 @@ class Agent {
 
     error (...args) {
         this.headerError(this.name, ...args)
+        logger.error(this.name, ...args)
     }
 
 
@@ -43,6 +45,7 @@ class Agent {
 
     log (...args) {
         this.headerLog(this.name, ...args)
+        logger.trace(this.name, ...args)
     }
 
 

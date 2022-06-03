@@ -1,24 +1,32 @@
 const fs = require("fs");
 const path = require("path");
 
+
 class Logger {
+	
 	constructor(name, dir = "./logs", cacheSize = 100) {
 		this.name = name;
     
 		if (!fs.existsSync(dir)) 
         	fs.mkdirSync(dir);
     
-		this.path = path.join(dir,
-			`${new Date().toISOString().replaceAll(':', '-').split('.')[0]}
-        	-${this.name}.log`);
-    
+		let currentDate = new Date();
+		let dateTime = currentDate.getFullYear() + '-'
+			+ (currentDate.getMonth() + 1) + "-"
+			+ currentDate.getDate() + "T"
+			+ currentDate.getHours() + ":"
+			+ currentDate.getMinutes() + ":"
+			+ currentDate.getSeconds();
+
+		this.path = path.join(dir, `${dateTime.replaceAll(':', '-').split('.')[0]}-${this.name}.log`);
+
     	this.cacheSize = cacheSize;
     	this.cache = []
 	}
 
 	log(level, message) {
-		const output = `${new Date().toISOString().replace('T',' ').split('.')[0]} ${this.name} ${level} ${message}`
-		console.log(output);
+		const output = `${new Date().toISOString().replace('T',' ').split('.')[0]} ${level} ${message}`
+		// console.log(output);
 		this.cache.push(output);
     
 		if (this.cache.length >= this.cacheSize) {
@@ -27,28 +35,42 @@ class Logger {
 		}
 	}
 
-	info(message) {
-		this.log('info', message)
+	extractMessage(text, ...args) {
+
+		for (let i = 0; i < args.length; i++)
+			text = text + ' ' + args[i]; 
+
+		return text;	
 	}
 
-	debug(message) {
-    	this.log('debug', message)
+	info(text, ...args) {
+		let message = this.extractMessage(text, ...args);
+		this.log('info', message);
 	}
 
-	trace(message) {
-		this.log('trace', message)
+	debug(text, ...args) {
+		let message = this.extractMessage(text, ...args);
+    	this.log('debug', message);
+	}
+
+	trace(text, ...args) {
+		let message = this.extractMessage(text, ...args);
+		this.log('trace', message);
 	}
 	
-	warn(message) {
-		this.log('warn', message)
+	warn(text, ...args) {
+		let message = this.extractMessage(text, ...args);
+		this.log('warn', message);
 	}
 	
-	error(message) {
-		this.log('error', message)
+	error(text, ...args) {
+		let message = this.extractMessage(text, ...args);
+		this.log('error', message);
 	}
 	
-	fatal(message) {
-		this.log('fatal', message)
+	fatal(text, ...args) {
+		let message = this.extractMessage(text, ...args);
+		this.log('fatal', message);
 	}
 
 	close() {
@@ -66,5 +88,6 @@ class Logger {
 // logger.error('Logging is too cool');
 // logger.fatal('App crashed because of X, Y and Z');
 
+var logger = new Logger('testlogger');
 
-module.exports = Logger;
+module.exports = logger;
