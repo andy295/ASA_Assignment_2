@@ -1,6 +1,8 @@
 class GlobalUtility {
 
     static stringToInt(str) {
+        let nAn;
+
         var matches = /\d+$/.exec(str);
         if (matches)
             return parseInt(matches[0], 10);
