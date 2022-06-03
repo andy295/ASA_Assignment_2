@@ -46,8 +46,9 @@ class WakeUpIntention extends Intention {
                             this.agent.beliefs.declare(this.bedroom.name + ' light_on') :
                             null;
 
-                        this.agent.beliefs.undeclare('start alarm')
-                    }
+                        }
+
+                    this.agent.beliefs.undeclare('start alarm')
                 }
             }
         });
