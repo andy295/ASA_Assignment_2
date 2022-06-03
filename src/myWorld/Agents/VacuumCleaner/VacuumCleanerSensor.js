@@ -12,10 +12,15 @@ var sensor = (agent) => (value,key,observable) => {
 
             switch(statement[0]) {
                 case 'is_room':
-                case 'clean':
                 case 'dirty':
                     if (agent.getOperationLevel() == 
+                        house.getRoom(statement[1]).getLevel())
+                        updateBeliefs = true;
+                break;
+                case 'clean':
+                    if (agent.getOperationLevel() == 
                         house.getRoom(statement[1]).getLevel()) {
+                        house.getRoom(statement[1]).setClean(true);
                         updateBeliefs = true;
                     }
                 break;
