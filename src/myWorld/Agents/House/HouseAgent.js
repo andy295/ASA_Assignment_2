@@ -35,7 +35,7 @@ class HouseAgent extends Agent {
 		}
 
 		this.turnOffAlarmClock = function() {
-			this.log('House: Turn off alamr clock', this.alarmClock.name)
+			this.log('House: Turn off alarm clock', this.alarmClock.name)
 			const alarmClock = this.alarmClock.name;
 			return new TurnOffAlarmClock(this, {alarmClock} ).checkPreconditionAndApplyEffect()
 			.catch(err=>{this.error('House.TurnOffAlarmClock failed:', err.message || err); throw err;})
