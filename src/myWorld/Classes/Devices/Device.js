@@ -1,5 +1,6 @@
 const Observable = require('../../../utils/Observable');
 
+
 class Device extends Observable {
     constructor (name, status, movable, consumption) {
         super({name: name, status: status});
@@ -8,7 +9,7 @@ class Device extends Observable {
         this.status = status;
         this.movable = movable;
         this.consumption = consumption;
-        this.set('total_consumption', 0);
+        this.total_consumption = 0;
     }
 
     getName() {
