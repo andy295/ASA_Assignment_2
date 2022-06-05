@@ -23,3 +23,6 @@ bin
 
 # pddl
 *.pddl
+
+# word backup
+*.wbk
