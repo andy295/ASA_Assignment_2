@@ -25,7 +25,7 @@
         "type":"windows",
         "status":false,
         "movable":false,
-        "consumption":0.29
+        "consumption":0.008
     },
     {
         "name":"roll_up_shtr_door",
@@ -33,6 +33,6 @@
         "type":"door",
         "status":false,
         "movable":false,
-        "consumption":0.32
+        "consumption":0.010
     }
 ]
