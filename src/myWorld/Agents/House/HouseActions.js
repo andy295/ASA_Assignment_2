@@ -28,13 +28,13 @@ class HouseAction {
 		if (this.checkPrecondition()) {
 			this.applyEffect();
 
-			let action_time = GlobalUtilities.stringToInt(this.parameters.action_time);
-			if (isNaN(action_time) || action_time <= 0)
-				action_time = 25;
+			let actionTime = GlobalUtilities.stringToInt(this.parameters.actionTime);
+			if (isNaN(actionTime) || actionTime <= 0)
+				actionTime = 25;
 			else
-				action_time = GlobalUtilities.actionTimeMs(action_time);
+				actionTime = GlobalUtilities.actionTimeMs(actionTime);
 
-			await new Promise(res=>setTimeout(res,action_time));
+			await new Promise(res=>setTimeout(res,actionTime));
 		}
 		else
 			throw new Error('pddl precondition not valid'); //Promise is rejected!

@@ -79,7 +79,7 @@ class Thermostat extends Device {
 
         let elapsed_time = ddToMm + hhToMM + diffMins; 
 
-        this.total_consumption += (elapsed_time / 60) * this.consumption; 
+        this.totalConsumption += (elapsed_time / 60) * this.consumption; 
     }
 }
 

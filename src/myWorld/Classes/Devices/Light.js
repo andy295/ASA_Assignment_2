@@ -45,7 +45,7 @@ class Light extends Device {
         let end_time = hToM + Clock.global.mm;
         let elapsed_time = end_time - this.start_time;
 
-        this.total_consumption += (elapsed_time / 60) * this.consumption;
+        this.totalConsumption += (elapsed_time / 60) * this.consumption;
     }
 }
 

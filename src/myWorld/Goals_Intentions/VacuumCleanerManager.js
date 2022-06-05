@@ -35,8 +35,7 @@ class VacuumCleanerIntention extends Intention {
                     
                     this.agent.clean(device.getGoal());
                     
-                    device.resetGoal();
-                    device.stopClean();
+                    device.reset(this.agent.getCleanTimeList());
                 }
             }
         });

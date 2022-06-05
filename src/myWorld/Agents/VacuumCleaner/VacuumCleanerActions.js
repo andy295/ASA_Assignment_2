@@ -36,7 +36,7 @@ class Clean extends pddlActionIntention {
         yield houseAgent.clean({
             robot: this.agent.name,
             room: room,
-            action_time: this.agent.clean_time[room]})
+            actionTime: this.agent.cleanTime[room]})
     }
 }
 

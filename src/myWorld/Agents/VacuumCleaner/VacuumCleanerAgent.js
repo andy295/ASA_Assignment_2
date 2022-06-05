@@ -18,7 +18,7 @@ class VacuumCleanerAgent extends Agent {
         this.intentions.push(RetryIntention)
 
         this.operationLevel = op_level;
-        this.clean_time = {};
+        this.cleanTime = {};
         this.deviceType = 'vacuumCleaner';
         this.device = new Object();
 	}
@@ -28,7 +28,15 @@ class VacuumCleanerAgent extends Agent {
     }
 
     setCleanTime(room) {
-        this.clean_time[room.name] = room.clean_time;
+        this.cleanTime[room.name] = room.clean_time;
+    }
+
+    getCleanTime(room) {
+        return this.cleanTime[room];
+    }
+
+    getCleanTimeList() {
+        return this.cleanTime;
     }
 
     clean(goal) {

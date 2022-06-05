@@ -140,6 +140,10 @@ class Room extends Observable {
         return new Object();
     }
 
+    getDeviceList() {
+        return this.devices;
+    }
+
     moveDeviceTo (devName, roomTo) {
         
         let device = this.getDevice(devName);

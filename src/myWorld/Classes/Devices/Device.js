@@ -9,7 +9,7 @@ class Device extends Observable {
         this.status = status;
         this.movable = movable;
         this.consumption = consumption;
-        this.total_consumption = 0;
+        this.totalConsumption = 0;
     }
 
     getName() {
@@ -29,11 +29,11 @@ class Device extends Observable {
     }
 
     getTotalConsumption() {
-        return this.total_consumption;
+        return this.totalConsumption;
     }
 
     resetTotalConsumption() {
-        this.total_consumption = 0;
+        this.totalConsumption = 0;
     }
 }
 

@@ -15,7 +15,7 @@ class RollUpShutter extends Device {
         if (!this.getStatus()) {
             this.setStatus(true)
 
-            this.total_consumption += this.consumption;
+            this.totalConsumption += this.consumption;
 
             return true;
         }
@@ -27,7 +27,7 @@ class RollUpShutter extends Device {
         if (this.getStatus()) {
             this.setStatus(false)
 
-            this.total_consumption += this.consumption;
+            this.totalConsumption += this.consumption;
 
             return true;
         }
