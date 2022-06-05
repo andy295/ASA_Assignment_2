@@ -1,6 +1,7 @@
 const Device = require('./Device');
 const Clock = require('../../../utils/Clock');
 
+
 class Light extends Device {
     constructor (name, status, movable, consumption) {
         super(name, status, movable, consumption);

@@ -18,5 +18,21 @@
         "status":false,
         "movable":true,
         "consumption":0.084
+    },
+    {
+        "name":"roll_up_shtr_win",
+        "globalName":"rollUpShutter",
+        "type":"windows",
+        "status":false,
+        "movable":false,
+        "consumption":290
+    },
+    {
+        "name":"roll_up_shtr_door",
+        "globalName":"rollUpShutter",
+        "type":"door",
+        "status":false,
+        "movable":false,
+        "consumption":320
     }
 ]
