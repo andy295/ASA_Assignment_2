@@ -103,6 +103,8 @@ var houseAgent = new HouseAgent('house');
 houseAgent.alarmClock.setTime(6, 30);
 houseAgent.lightTime.setTimeFrom(21, 30);
 houseAgent.lightTime.setTime(7, 0)
-houseAgent.cleaningTime.setTime(10 , 30);
+houseAgent.cleaningTime.setTime(10, 30);
+houseAgent.sleepTime.setTime(23, 30);
+houseAgent.consumptionTime.setTime(23, 55);
 
 module.exports = houseAgent;
