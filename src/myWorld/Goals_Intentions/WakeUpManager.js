@@ -46,7 +46,8 @@ class WakeUpIntention extends Intention {
                             this.agent.beliefs.declare(this.bedroom.name + ' light_on') :
                             null;
 
-                        }
+                        this.agent.beliefs.declare('open roll_up_shutter');
+                    }
 
                     this.agent.beliefs.undeclare('start alarm')
                 }

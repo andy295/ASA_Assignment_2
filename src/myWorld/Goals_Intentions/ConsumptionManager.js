@@ -37,24 +37,34 @@ class ManageConsumptionIntention extends Intention {
                 let status = await this.agent.beliefs.notifyChange('compute consumption');
 
                 if (status) {
-                    let electricity_total_consumption = 0;
+                    let energyTotalConsumption = 0;
 
                     for (let [key_r, room] of Object.entries(this.rooms)) {
 
-                        if (room.devices.light) {
-                            // console.log(room.name + ' light ' + room.devices.light.isLightOn())
-                            electricity_total_consumption += room.devices.light.getTotalConsumption();
+                        if (room.devices.hasOwnProperty('light')) {
+                            // console.log(room.name + ' light ' + room.devices.light.isLightOn());
+                            energyTotalConsumption += room.devices.light.getTotalConsumption();
                             room.devices.light.resetTotalConsumption();
                         }
                             
-                        if (room.devices.thermostat) {
-                            // console.log(room.name + ' temperature ' + room.devices.thermostat.getTemperature())
-                            electricity_total_consumption += room.devices.thermostat.getTotalConsumption();
+                        if (room.devices.hasOwnProperty('thermostat')) {
+                            // console.log(room.name + ' temperature ' + room.devices.thermostat.getTemperature());
+                            energyTotalConsumption += room.devices.thermostat.getTotalConsumption();
                             room.devices.thermostat.resetTotalConsumption();
+                        }
+
+                        if (room.devices.hasOwnProperty('rollUpShutter')) {
+                            let list = room.devices['rollUpShutter'];
+
+                            for (const rollUpShutter of list) {
+                                // console.log(room.name + ' rollUpShutter ' + room.devices.rollUpShutter.isOpen());
+                                energyTotalConsumption += rollUpShutter.getTotalConsumption();
+                                rollUpShutter.resetTotalConsumption();
+                            }
                         }
                     }   
                     
-                    this.log('\tElectricity total consumption: ' + (Math.round(electricity_total_consumption * 100) / 100).toFixed(2));
+                    this.log('\tElectricity total consumption: ' + (Math.round(energyTotalConsumption * 100) / 100).toFixed(2));
 
                     this.agent.beliefs.undeclare('compute consumption');
                 }

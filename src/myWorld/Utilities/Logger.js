@@ -24,9 +24,12 @@ class Logger {
     	this.cache = []
 	}
 
-	log(level, message) {
+	log(level, message, logConsole = false) {
 		const output = `${new Date().toISOString().replace('T',' ').split('.')[0]} ${level} ${message}`
-		// console.log(output);
+		
+		if (logConsole)
+			console.log(message);
+
 		this.cache.push(output);
     
 		if (this.cache.length >= this.cacheSize) {
@@ -43,31 +46,42 @@ class Logger {
 		return text;	
 	}
 
-	info(text, ...args) {
-		let message = this.extractMessage(text, ...args);
-		this.log('info', message);
-	}
-
-	debug(text, ...args) {
-		let message = this.extractMessage(text, ...args);
-    	this.log('debug', message);
-	}
-
 	trace(text, ...args) {
 		let message = this.extractMessage(text, ...args);
 		this.log('trace', message);
 	}
 	
-	warn(text, ...args) {
+	traceConsole(text, ...args) {
 		let message = this.extractMessage(text, ...args);
-		this.log('warn', message);
+		this.log('trace', message, true);
 	}
-	
+
 	error(text, ...args) {
 		let message = this.extractMessage(text, ...args);
 		this.log('error', message);
 	}
+
+	errorConsole(text, ...args) {
+		let message = this.extractMessage(text, ...args);
+		this.log('error', message, true);
+	}
 	
+	// enable if you need them
+	// info(text, ...args) {
+	// 	let message = this.extractMessage(text, ...args);
+	// 	this.log('info', message);
+	// }
+
+	// debug(text, ...args) {
+	// 	let message = this.extractMessage(text, ...args);
+    // 	this.log('debug', message);
+	// }
+
+	// warn(text, ...args) {
+	// 	let message = this.extractMessage(text, ...args);
+	// 	this.log('warn', message);
+	// }
+
 	fatal(text, ...args) {
 		let message = this.extractMessage(text, ...args);
 		this.log('fatal', message);

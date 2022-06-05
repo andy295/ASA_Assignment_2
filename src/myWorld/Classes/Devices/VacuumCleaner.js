@@ -1,22 +1,35 @@
 const Device = require('./Device');
 
+
 class VacuumCleaner extends Device {
     constructor (name, status, movable, consumption, location) {
         super(name, status, movable, consumption, location);
         this.location = location;
 
+        // consumption => kW/h
+        
         this.set('clean', false);
 
         this.goal = [];
 
-        // consumption => kW/h
+        this.clean = false;
     }
 
-    move(room) { 
-	    if (this.location != room) {
-			this.position = room; 
-		}
-	}
+    startClean() {
+        this.clean = true;
+    }
+
+    stopClean() {
+        this.clean = false;
+    }
+
+    isCleaning() {
+        return this.clean;
+    }
+
+    needClean() {
+        return this.clean;
+    }
 
     updateGoal(goal) {
         this.goal.push(goal);
@@ -34,20 +47,19 @@ class VacuumCleaner extends Device {
         this.goal = [];
     }
 
-    resetClean() {
-        this.clean = false;
-    }
-
-    setClean(value) {
-        this.clean = value;
-    }
-
-    getClean() {
-        return this.clean;
-    }
-
     getLocation() {
         return this.location;
+    }
+
+    getCopy(roomName) {
+        var copy = new VacuumCleaner(
+                this.name,
+                this.status,
+                this.movable,
+                this.consumption,
+                roomName);
+
+        return copy;
     }
 }
 

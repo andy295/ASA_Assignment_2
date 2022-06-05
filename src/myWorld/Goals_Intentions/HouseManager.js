@@ -126,8 +126,10 @@ class ManageHouseIntention extends Intention {
 
                 // sleep
                 if (this.agent.beliefs.check('wake_up people') &&
-                    this.checkTime(2, this.agent.sleepTime))
-                    this.agent.beliefs.undeclare('wake_up people');
+                    this.checkTime(2, this.agent.sleepTime)) {
+                        this.agent.beliefs.undeclare('wake_up people');
+                        this.agent.beliefs.undeclare('open roll_up_shutter');
+                    }
 
                 // clean
                 if (this.checkTime(3, this.agent.cleaningTime))

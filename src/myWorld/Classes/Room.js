@@ -1,11 +1,14 @@
 const GlobalUtilities = require('../Utilities/GlobalUtilities');
 const Observable = require('../../utils/Observable');
+const Device = require('./Devices/Device');
 const Light = require('./Devices/Light');
 const Thermostat = require('./Devices/Thermostat');
 const VacuumCleaner = require('./Devices/VacuumCleaner');
+const RollUpShutter = require('./Devices/RollUpShutter');
+const logger = require('../Utilities/Logger');
 
 class Room extends Observable {
-    constructor (name, level, doors_to, cleanable, type, devices) {
+    constructor (name, level, doors_to, cleanable, type, devicesName) {
         super({name: name})
         this.name = name;
         this.level = level;
@@ -17,7 +20,7 @@ class Room extends Observable {
         this.set('clean', true);
 
         this.devices = {};
-        this.#generateDeviceList(devices);
+        this.#generateDeviceList(devicesName);
     }
 
     getName() {
@@ -40,60 +43,93 @@ class Room extends Observable {
         return -1;
     }
 
-    #generateDeviceList(devices) {
+    #generateDeviceList(devicesName) {
         
         const devicesData = require('./house_config/Devices.json');
-        let cases = [];
-        for(let i = 0; i < devicesData.length; i++) {
-            cases[i] = devicesData[i].name; 
-        }
+        for (const name of devicesName) {
+            for (const dev of devicesData) {
+                if (name == dev.name) {
 
-        for (const device of devices) {
-            switch(device) {
-                case cases[0]:
-                    this.devices[devicesData[0].name] = 
-                        new Light(
-                            devicesData[0].name,
-                            devicesData[0].status,
-                            devicesData[0].movable,
-                            devicesData[0].consumption);   
-                break;
-                case cases[1]:
-                    this.devices[devicesData[1].name] = 
-                    new Thermostat(
-                        devicesData[1].name,
-                        devicesData[1].status,
-                        devicesData[1].movable,
-                        devicesData[1].consumption,
-                        devicesData[1].temperature,
-                        devicesData[1].work_program);
-                break;
-                case cases[2]:
-                    this.devices[devicesData[2].name] =
-                    new VacuumCleaner(
-                        devicesData[2].name,
-                        devicesData[2].status,
-                        devicesData[2].movable,
-                        devicesData[2].consumption,
-                        this.name);
-                break;
-                default:
-                    break; 
-            } 
+                    switch (name) {
+                        case 'light':
+                            this.devices[dev.name] = 
+                            new Light(
+                                dev.name,
+                                dev.status,
+                                dev.movable,
+                                dev.consumption);   
+                        break;
+                        case 'thermostat':
+                            this.devices[dev.name] = 
+                                new Thermostat(
+                                    dev.name,
+                                    dev.status,
+                                    dev.movable,
+                                    dev.consumption,
+                                    dev.temperature,
+                                    dev.work_program);
+                        break;
+                        case 'vacuumCleaner':
+                            this.devices[dev.name] = 
+                                new VacuumCleaner(
+                                    dev.name,
+                                    dev.status,
+                                    dev.movable,
+                                    dev.consumption,
+                                    this.name);
+                        break;
+                        case 'roll_up_shtr_win':
+                        case 'roll_up_shtr_door':
+                        {
+                            if (!this.devices.hasOwnProperty(dev.globalName)) {
+                                let list = [];
+                                this.devices[dev.globalName] = list;
+                            }
+                                                    
+                            let list = this.devices[dev.globalName];
+                                                    
+                            let rollUpShutter =
+                                new RollUpShutter(
+                                    dev.globalName,
+                                    dev.status,
+                                    dev.movable,
+                                    dev.consumption,
+                                    dev.type);
+                                                        
+                            list.push(rollUpShutter);
+                        }
+                        break;
+                        default:
+                        break;
+                    }
+
+                    break;
+                }
+            }
         }
     }
 
     addDevice(device) {
-        this.devices.push(device);
+        if (this.devices.hasOwnProperty(device.getName())) {
+            logger.errorConsole(device.getName() + ' cannot be added to ' + this.name);
+            return false;
+        }
+
+        if (typeof device.getCopy == "undefined") { 
+            logger.errorConsole(device.getName() + ' has not copy method');
+            return false;
+        }
+
+        this.devices[device.getName()] = device.getCopy(this.name); 
+        return true;
     }
 
-    #removeDevice(idx) {
-
-        var device = devices.splice(idx, 1);
-        return device;
+    #removeDevice(device) {
+        if (this.devices.hasOwnProperty(device.getName()))
+            delete this.devices[device.getName()];
     }
 
-    getDevicesList() {
+    getdevicesName() {
         return this.doors_to;
     }
 
@@ -104,21 +140,26 @@ class Room extends Observable {
         return new Object();
     }
 
-    moveDeviceTo (device, to) {
-        let idx = this.getDevice(device);
-        if (idx == -1) {
-            this.error(device + ' is not in ' + this.name);
+    moveDeviceTo (devName, roomTo) {
+        
+        let device = this.getDevice(devName);
+        if (!GlobalUtilities.isValidObj(device)) {
+            logger.errorConsole('Device not found in ' + this.name);
             return false;
         }
 
-        if (!devices[idx].movable) {
-            this.error(device + ' cannot be removed from ' + this.name);
+        if (!device.isMovable()) {
+            logger.errorConsole(device.getName() + ' cannot be removed from ' + this.name);
             return false;
         }
         
-        let dev = this.#removeDevice(idx);
-        to.addDevice(dev);
-        this.error(device + ' moved from ' + this.name + ' to ' + to.name);
+        if (!roomTo.addDevice(device))
+            return false;
+
+        this.#removeDevice(device);
+
+        logger.traceConsole('House:', device.getName() + ' moved from ' + this.name + ' to ' + roomTo.getName());
+        
         return true;
     }
 
