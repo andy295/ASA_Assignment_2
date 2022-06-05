@@ -4,7 +4,7 @@ const Intention = require('../../bdi/Intention');
 
 class VacuumCleanerGoal extends Goal {
 
-    constructor (device) {
+    constructor () {
         super();
     }
 }
