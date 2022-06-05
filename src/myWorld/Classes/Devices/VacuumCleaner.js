@@ -1,3 +1,4 @@
+const GlobalUtilities = require('../../Utilities/GlobalUtilities');
 const Device = require('./Device');
 
 
@@ -60,6 +61,30 @@ class VacuumCleaner extends Device {
                 roomName);
 
         return copy;
+    }
+
+    #calcConsumption(cleanTimes) {
+        if (GlobalUtilities.isValidObj(cleanTimes))
+        {
+            for (const key of this.goal) {
+                let statement = [] = key.split(' ');
+
+                if (statement[0] == 'clean' ) {
+                    if (cleanTimes.hasOwnProperty(statement[1])) {
+            
+                        let time = cleanTimes[statement[1]];
+                        this.totalConsumption += (this.consumption * (time / 60));
+                    }
+                }
+            }
+        }
+    }
+
+    reset(cleanTimes) {
+
+        this.#calcConsumption(cleanTimes);
+        this.resetGoal();
+        this.stopClean();
     }
 }
 
