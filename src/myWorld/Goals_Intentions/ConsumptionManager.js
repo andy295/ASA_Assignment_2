@@ -40,26 +40,18 @@ class ManageConsumptionIntention extends Intention {
                     let energyTotalConsumption = 0;
 
                     for (let [key_r, room] of Object.entries(this.rooms)) {
+                        for (let [key_d, device] of Object.entries(room.getDeviceList())) {
 
-                        if (room.devices.hasOwnProperty('light')) {
-                            // console.log(room.name + ' light ' + room.devices.light.isLightOn());
-                            energyTotalConsumption += room.devices.light.getTotalConsumption();
-                            room.devices.light.resetTotalConsumption();
-                        }
-                            
-                        if (room.devices.hasOwnProperty('thermostat')) {
-                            // console.log(room.name + ' temperature ' + room.devices.thermostat.getTemperature());
-                            energyTotalConsumption += room.devices.thermostat.getTotalConsumption();
-                            room.devices.thermostat.resetTotalConsumption();
-                        }
-
-                        if (room.devices.hasOwnProperty('rollUpShutter')) {
-                            let list = room.devices['rollUpShutter'];
-
-                            for (const rollUpShutter of list) {
-                                // console.log(room.name + ' rollUpShutter ' + room.devices.rollUpShutter.isOpen());
-                                energyTotalConsumption += rollUpShutter.getTotalConsumption();
-                                rollUpShutter.resetTotalConsumption();
+                            if (!Array.isArray(device)) {
+                                energyTotalConsumption += device.getTotalConsumption();
+                                device.resetTotalConsumption();
+                            }
+                            else {
+                                for (const val of device) {
+                                
+                                    energyTotalConsumption += val.getTotalConsumption();
+                                    val.resetTotalConsumption();
+                                }
                             }
                         }
                     }   
