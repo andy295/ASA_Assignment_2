@@ -5,6 +5,7 @@ const Light = require('../Classes/Devices/Light');
 const Thermostat = require('../Classes/Devices/Thermostat');
 const Clock = require('../../utils/Clock');
 
+
 class ManageConsumptionGoal extends Goal {
 
     constructor (rooms = []) {

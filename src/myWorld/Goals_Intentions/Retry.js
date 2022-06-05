@@ -2,6 +2,7 @@ const Beliefset = require("../../bdi/Beliefset");
 const Goal = require("../../bdi/Goal");
 const Intention = require("../../bdi/Intention");
 
+
 class RetryGoal extends Goal { }
 
 class RetryIntention extends Intention {

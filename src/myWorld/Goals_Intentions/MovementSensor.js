@@ -2,6 +2,7 @@ const Goal = require('../../bdi/Goal');
 const Intention = require('../../bdi/Intention');
 const Room = require('../Classes/Room');
 
+
 class SenseMovementsGoal extends Goal {
 
     constructor (people = [], rooms = []) {

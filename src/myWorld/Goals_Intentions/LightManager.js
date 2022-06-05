@@ -29,7 +29,7 @@ class ManageLightsIntention extends Intention {
 
     lightNeeded(lightTime) {
         if (Clock.global.hh < lightTime.getHH() ||
-            Clock.global.hh > lightTime.getFromHH())
+            Clock.global.hh >= lightTime.getFromHH())
             return true;
 
         return false;

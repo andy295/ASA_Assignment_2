@@ -27,7 +27,7 @@ class VacuumCleanerIntention extends Intention {
                 let device = this.agent.getDevice();
                 let needToClean = await device.notifyChange('clean');
 
-                if (device.getClean())
+                if (device.needClean())
                 {
                     // enable it if you need more traces
                     // this.log('floor ' + this.agent.getOperationLevel() + 
@@ -36,7 +36,7 @@ class VacuumCleanerIntention extends Intention {
                     this.agent.clean(device.getGoal());
                     
                     device.resetGoal();
-                    device.resetClean();
+                    device.stopClean();
                 }
             }
         });

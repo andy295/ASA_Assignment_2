@@ -3,6 +3,7 @@ const Intention = require('../../bdi/Intention');
 const Thermostat = require('../Classes/Devices/Thermostat');
 const Clock = require('../../utils/Clock');
 
+
 class ManageThermostatsGoal extends Goal {
 
     constructor (rooms = []) {

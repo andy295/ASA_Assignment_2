@@ -60,7 +60,7 @@ class CleanlinessIntention extends Intention {
                     for (let [level, device] of Object.entries(this.devices))
                         if (device.hasGoal()) {
                             device.updateGoal('in ' + device.getLocation());                            
-                            device.setClean(true);
+                            device.startClean();
                         }
 
                     this.agent.beliefs.undeclare('check cleanliness');

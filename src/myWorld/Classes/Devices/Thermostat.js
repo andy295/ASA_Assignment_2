@@ -2,6 +2,7 @@ const GlobalUtilities = require('../../Utilities/GlobalUtilities');
 const Device = require('./Device');
 const Clock = require('../../../utils/Clock');
 
+
 class Thermostat extends Device {
     #programs = ['Winter', 'Spring', 'Summer', 'Autumn'];
 
@@ -15,23 +16,6 @@ class Thermostat extends Device {
         this.desired_temperature = 22;
         this.start_time_ccs;
         this.set('temperature', temperature);
-    }
-
-    getWorkProgramName(prog_nr) {
-        return this.#programs[prog_nr];
-    }
-
-    getWorkProgramName() {
-        return getWorkProgramName(this.work_program);
-    }
-
-    getProgramNr() {
-        return this.work_program;
-    }
-
-    setProgram(idx) {
-        this.work_program = idx;
-        console.log(this.#programs[idx] + ' set up');   
     }
 
     getTemperature() {
