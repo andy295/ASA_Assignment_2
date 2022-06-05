@@ -51,11 +51,9 @@ var sensor = (agent) => (value,key,observable) => {
 
                                 const roomFrom = house.getRoom(deviceLocation); 
                                 const roomTo = house.getRoom(statement[2]);
-                                const devName = agent.getDevice().getName(); 
                                 if (GlobalUtility.isValidObj(roomTo) &&
                                     GlobalUtility.isValidObj(roomFrom)) {
-                                        if (roomFrom.moveDeviceTo(devName, roomTo))
-                                        agent.setDevice(roomTo.getDevice(devName));
+                                        roomFrom.moveVacuumCleaner(roomTo);
                                 }
                             }            
                         }

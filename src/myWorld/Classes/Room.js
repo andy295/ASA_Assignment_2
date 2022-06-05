@@ -20,6 +20,8 @@ class Room extends Observable {
 
         this.set('clean', true);
 
+        this.vacuumCleaner;
+        
         this.devices = {};
         this.#generateDeviceList(devicesName);
     }
@@ -71,7 +73,7 @@ class Room extends Observable {
                                     dev.work_program);
                         break;
                         case 'vacuumCleaner':
-                            this.devices[dev.name] = 
+                            this.vacuumCleaner = 
                                 new VacuumCleaner(
                                     dev.name,
                                     dev.status,
@@ -133,6 +135,29 @@ class Room extends Observable {
         return true;
     }
 
+    addVacuumCleaner(device) {
+        this.vacuumCleaner = device;
+        this.vacuumCleaner.setLocation(this.name);
+    }
+
+    removeVacuumCleaner() {
+        this.vacuumCleaner = null;
+    }
+
+    getVacuumCleaner() {
+        return this.vacuumCleaner;
+    }
+
+    moveVacuumCleaner(roomTo) {
+        roomTo.addVacuumCleaner(this.vacuumCleaner);
+        this.removeVacuumCleaner();
+
+        logger.traceConsole('House:', 
+            'vacuum cleaner moved from ' + 
+            this.name + ' to ' + 
+            roomTo.getName());
+    }
+
     #removeDevice(device) {
         if (this.devices.hasOwnProperty(device.getName()))
             delete this.devices[device.getName()];
@@ -171,8 +196,9 @@ class Room extends Observable {
 
         this.#removeDevice(device);
 
-        logger.traceConsole('House:', device.getName() + ' moved from ' + this.name + ' to ' + roomTo.getName());
-        
+        logger.traceConsole('House:', 
+            device.getName() + ' moved from ' + 
+            this.name + ' to ' + roomTo.getName());
         return true;
     }
 

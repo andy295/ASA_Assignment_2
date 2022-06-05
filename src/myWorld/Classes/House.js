@@ -78,7 +78,7 @@ class House {
                 if (deviceAgent.getType() == 'vacuumCleaner' && 
                     deviceAgent.getOperationLevel() == room.level) {
 
-                    deviceAgent.setDevice(this.rooms[room.name].getDevice(deviceAgent.getType()));
+                    deviceAgent.setDevice(this.rooms[room.name].getVacuumCleaner());
                     if(GlobalUtilities.isValidObj(deviceAgent.getDevice())) {
                         houseAgent.beliefs.declare('in ' + deviceAgent.getName() + ' ' + room.name);
                         houseAgent.beliefs.declare('is_robot '+ deviceAgent.getName());

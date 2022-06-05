@@ -52,16 +52,10 @@ class VacuumCleaner extends Device {
         return this.location;
     }
 
-    getCopy(roomName) {
-        var copy = new VacuumCleaner(
-                this.name,
-                this.status,
-                this.movable,
-                this.consumption,
-                roomName);
-
-        return copy;
+    setLocation(v) {
+        this.location = v;
     }
+
 
     #calcConsumption(cleanTimes) {
         if (GlobalUtilities.isValidObj(cleanTimes))
