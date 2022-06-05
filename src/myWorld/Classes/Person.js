@@ -20,13 +20,6 @@ class Person extends Observable {
             return false;
         }
 
-        // let doors_to = this.house.getRoom(this.in_room); 
-        // if (!(to in doors_to)) {
-        //      todo
-        //      looks how, and if, the destination can be reached
-        //      maybe this is a planning ploblem 
-        // }
-
         this.prev_room = this.in_room;
         this.in_room = to;
         this.house.updateRoomStatus(this.prev_room, this.in_room);
