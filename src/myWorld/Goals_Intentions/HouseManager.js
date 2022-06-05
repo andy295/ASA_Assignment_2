@@ -48,8 +48,7 @@ class ManageHouseIntention extends Intention {
             break;
             default:
                 {
-                    dd = -1;
-                    hh = 0;
+                    hh = 6;
                     mm = 0;
                 }
             break;
