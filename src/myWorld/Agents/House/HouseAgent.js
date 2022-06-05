@@ -14,11 +14,11 @@ class HouseAgent extends Agent {
 		
 		this.alarmClock = new Object();
 		this.#createTimer(this.alarmClock);
-		this.#createAlarmClock();
+		this.#createAlarmClock(this.alarmClock);
 
 		this.lightTime = new Object();
 		this.#createTimer(this.lightTime);
-		this.#createLightTime();
+		this.#createLightTime(this.lightTime);
 
 		this.cleaningTime = new Object();
 		this.#createTimer(this.cleaningTime);
@@ -28,6 +28,10 @@ class HouseAgent extends Agent {
 
 		this.consumptionTime = new Object();
 		this.#createTimer(this.consumptionTime);
+
+		this.solarPanelTime = new Object();
+		this.#createTimer(this.solarPanelTime);
+		this.#createLightTime(this.solarPanelTime);
 
 		this.#addAction();
 	}
@@ -71,27 +75,27 @@ class HouseAgent extends Agent {
 		}
 	}
 
-	#createAlarmClock() {
-		this.alarmClock.name = 'house alarm clock',
+	#createAlarmClock(obj) {
+		obj.name = 'house alarm clock',
 		
-		this.alarmClock.getName = function() {
+		obj.getName = function() {
 				return this.name;
 		}
 	}
 
-	#createLightTime() {
-		this.lightTime.fromHH = 19;
-		this.lightTime.fromMM = 0;
+	#createLightTime(obj) {
+		obj.fromHH = 19;
+		obj.fromMM = 0;
 
-		this.lightTime.getFromHH = function() {
+		obj.getFromHH = function() {
 			return this.fromHH;
 		}
 
-		this.lightTime.getFromMM = function() {
+		obj.getFromMM = function() {
 			return this.fromMM;
 		}
 
-		this.lightTime.setTimeFrom = function(hh, mm) {
+		obj.setTimeFrom = function(hh, mm) {
 			this.fromHH = hh;
 			this.fromMM = mm;
 		}
@@ -100,11 +104,13 @@ class HouseAgent extends Agent {
 
 var houseAgent = new HouseAgent('house');
 
-houseAgent.alarmClock.setTime(6, 30);
 houseAgent.lightTime.setTimeFrom(21, 30);
+houseAgent.alarmClock.setTime(6, 30);
 houseAgent.lightTime.setTime(7, 0)
 houseAgent.cleaningTime.setTime(10, 30);
 houseAgent.sleepTime.setTime(23, 30);
 houseAgent.consumptionTime.setTime(23, 55);
+houseAgent.solarPanelTime.setTimeFrom(8, 0);
+houseAgent.solarPanelTime.setTime(18, 0);
 
 module.exports = houseAgent;

@@ -90,6 +90,11 @@ class ManageHouseIntention extends Intention {
                     Clock.global.mm == objTime.getMM())
                     return true;
             break;
+            case 5:
+                if ((Clock.global.hh >= objTime.getFromHH()) &&
+                    (Clock.global.hh < objTime.getHH()))
+                    return true;
+            break;
             default:
             break;
         }
@@ -138,6 +143,11 @@ class ManageHouseIntention extends Intention {
                 // consumption
                 if (this.checkTime(4, this.agent.consumptionTime))
                     this.agent.beliefs.declare('compute consumption');
+
+                // solar panel
+                if (this,this.checkTime(5, this.agent.solarPanelTime))
+                    if (Clock.global.mm == 0)
+                        this.agent.beliefs.declare('energy produced');
 
                 if (curr_day != Clock.global.dd)
                     curr_day = Clock.global.dd;

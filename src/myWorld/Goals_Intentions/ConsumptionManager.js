@@ -38,6 +38,7 @@ class ManageConsumptionIntention extends Intention {
 
                 if (status) {
                     let energyTotalConsumption = 0;
+                    let energyTotalProduction = 0;
 
                     for (let [key_r, room] of Object.entries(this.rooms)) {
                         for (let [key_d, device] of Object.entries(room.getDeviceList())) {
@@ -45,18 +46,35 @@ class ManageConsumptionIntention extends Intention {
                             if (!Array.isArray(device)) {
                                 energyTotalConsumption += device.getTotalConsumption();
                                 device.resetTotalConsumption();
+
+                                if (device.hasOwnProperty('totalProduction')) {
+                                    energyTotalProduction += device.getTotalProduction();
+                                    device.resetTotalProduction();
+                                }
+
                             }
                             else {
                                 for (const val of device) {
                                 
                                     energyTotalConsumption += val.getTotalConsumption();
                                     val.resetTotalConsumption();
+
+                                    if (val.hasOwnProperty('totalProduction')) {
+                                        energyTotalProduction += val.getTotalProduction();
+                                        val.resetTotalProduction();
+                                    }
                                 }
                             }
                         }
                     }   
                     
-                    this.log('\tElectricity total consumption: ' + (Math.round(energyTotalConsumption * 100) / 100).toFixed(2));
+                    this.log('\tElectricity total consumption: ' + 
+                        (Math.round(energyTotalConsumption * 100) / 100).toFixed(2) + 
+                        ' kW');
+                        
+                    this.log('\tElectricity total production: ' + 
+                    (Math.round(energyTotalProduction * 100) / 100).toFixed(2) +
+                        ' kW');
 
                     this.agent.beliefs.undeclare('compute consumption');
                 }

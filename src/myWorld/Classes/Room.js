@@ -5,6 +5,7 @@ const Light = require('./Devices/Light');
 const Thermostat = require('./Devices/Thermostat');
 const VacuumCleaner = require('./Devices/VacuumCleaner');
 const RollUpShutter = require('./Devices/RollUpShutter');
+const SolarPanel = require('./Devices/SolarPanel');
 const logger = require('../Utilities/Logger');
 
 class Room extends Observable {
@@ -98,6 +99,14 @@ class Room extends Observable {
                                                         
                             list.push(rollUpShutter);
                         }
+                        break;
+                        case 'solarPanel':
+                            this.devices[dev.name] = 
+                            new SolarPanel(
+                                dev.name,
+                                dev.status,
+                                dev.movable,
+                                dev.production);
                         break;
                         default:
                         break;
@@ -197,7 +206,7 @@ class Room extends Observable {
 
     updateClean() {
         this.clean = 
-        GlobalUtilities.generateRandomValue(0, 1) ?
+        GlobalUtilities.getRandomInt(0, 1) ?
             true : false;
     }
 }
