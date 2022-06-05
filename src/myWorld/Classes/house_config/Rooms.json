@@ -63,7 +63,8 @@
 			"camera",
 			"door",
 			"roll_up_shtr_win",
-			"vacuumCleaner"
+			"vacuumCleaner",
+			"solarPanel"
 		]
 	},
 	{

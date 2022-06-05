@@ -9,7 +9,7 @@ class Thermostat extends Device {
     constructor (name, status, movable, consumption, temperature, work_program) {
         super(name, status, movable, consumption);
 
-        // consumption => kW/h
+        // consumption => kWh
 
         this.work_program = work_program;
         this.tollerance = 2;
@@ -39,7 +39,7 @@ class Thermostat extends Device {
     }
 
     updateTemperature() {
-        this.temperature = GlobalUtilities.generateRandomValue(18, 25);
+        this.temperature = GlobalUtilities.getRandomInt(18, 25);
     }
 
     switchCCSystemOn() {

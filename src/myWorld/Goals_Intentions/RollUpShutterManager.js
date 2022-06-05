@@ -39,11 +39,8 @@ class ManageRollUpShuttersIntention extends Intention {
                         let list = room.devices['rollUpShutter'];
 
                         if (status) {
-                            if (room.getName() == 'study') {
-                                let x = 0;
-                            }
-
                             for (const rollUpShutter of list) {
+
                                 rollUpShutter.open() ? 
                                 this.agent.beliefs.declare(room.name + ' ' +
                                     rollUpShutter.getName() + 
@@ -54,6 +51,7 @@ class ManageRollUpShuttersIntention extends Intention {
                         }
                         else {
                             for (const rollUpShutter of list) {
+                       
                                 rollUpShutter.close() ? 
                                 this.agent.beliefs.undeclare(room.name + ' ' +
                                     rollUpShutter.getName() + 

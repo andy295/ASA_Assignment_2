@@ -7,7 +7,7 @@ class VacuumCleaner extends Device {
         super(name, status, movable, consumption, location);
         this.location = location;
 
-        // consumption => kW/h
+        // consumption => kWh
         
         this.set('clean', false);
 

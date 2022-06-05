@@ -1,5 +1,4 @@
 const Device = require('./Device');
-const Clock = require('../../../utils/Clock');
 
 
 class RollUpShutter extends Device {

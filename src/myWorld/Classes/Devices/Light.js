@@ -6,7 +6,7 @@ class Light extends Device {
     constructor (name, status, movable, consumption) {
         super(name, status, movable, consumption);
 
-        // consumption => kW/h
+        // consumption => kWh
 
         this.start_time = 0; // [min]
     }
