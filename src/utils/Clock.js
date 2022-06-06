@@ -36,7 +36,7 @@ class Clock {
             
             var {dd, hh, mm} = Clock.global;
             
-            if (mm < 60)
+            if (mm <= 55)
                 Clock.global.mm += 5;
             else {
                 if (hh < 23) {
