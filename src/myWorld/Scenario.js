@@ -1,41 +1,74 @@
-const House =  require('./Classes/House');
-const Agent = require('../bdi/Agent');
+const GlobalUtilities = require('./Utilities/GlobalUtilities');
 const Clock =  require('../utils/Clock');
-const {DaysEnum, MonthsEnum} = require('./Utilities/Calendar');
-const {AlarmGoal, AlarmIntention} = require('./Goals_Intentions/AlarmManager');
+const {ManageHouseGoal, ManageHouseIntention} = require('./Goals_Intentions/HouseManager');
+const {WakeUpGoal, WakeUpIntention} = require('./Goals_Intentions/WakeUpManager');
 const {SenseMovementsGoal, SenseMovementsIntention} = require('./Goals_Intentions/MovementSensor');
-const {ManageLightsGoal, ManageLightsIntention} = require('./Goals_Intentions/LightManager');
+const {ManageLightsGoal, ManageLightsIntention, 
+    AutoTurnLightOnOffGoal, AutoTurnLightOnOffIntention} = require('./Goals_Intentions/LightManager');
 const {ManageConsumptionGoal, ManageConsumptionIntention} = require('./Goals_Intentions/ConsumptionManager');
 const {ManageThermostatsGoal, ManageThermostatsIntention} = require('./Goals_Intentions/ThermostatManager');
+const {CleanlinessGoal, CleanlinessIntention} = require('./Goals_Intentions/CleanerManager');
+const {VacuumCleanerGoal, VacuumCleanerIntention} = require('./Goals_Intentions/VacuumCleanerManager');
+const {ManageRollUpShuttersGoal, ManageRollUpShuttersIntention} = require('./Goals_Intentions/RollUpShutterManager');
+const house =  require('./Classes/House');
+const houseAgent = require('./Agents/House/HouseAgent');
+const vacuumCleanerAgents = require('./Agents/VacuumCleaner/VacuumCleanerAgent');
+const {DaysEnum, MonthsEnum} = require('./Utilities/Calendar');
+const sensor = require('./Agents/VacuumCleaner/VacuumCleanerSensor');
+const logger = require('./Utilities/Logger');
+const { ManageSolarPanelIntention, ManageSolarPanelGoal } = require('./Goals_Intentions/SolarPanelManager');
 
-// House, which includes people, rooms and devices
-var house = new House();
 
-// Agents
-var agent = new Agent('house_agent');
-agent.beliefs.declare('people_in_' + house.rooms.bedroom.getName());
+houseAgent.intentions.push(ManageHouseIntention);
+houseAgent.postSubGoal(new ManageHouseGoal(DaysEnum.monday));
 
-agent.intentions.push(AlarmIntention);
-agent.postSubGoal(new AlarmGoal(DaysEnum.monday, 6, 45, house.rooms.bedroom));
+houseAgent.intentions.push(WakeUpIntention);
+houseAgent.postSubGoal(new WakeUpGoal(house.getRoom('bedroom')));
 
-agent.intentions.push(SenseMovementsIntention);
-agent.postSubGoal(new SenseMovementsGoal(house.people, house.rooms));
+houseAgent.intentions.push(SenseMovementsIntention);
+houseAgent.postSubGoal(new SenseMovementsGoal(house.people, house.rooms));
 
-agent.intentions.push(ManageLightsIntention);
-agent.postSubGoal(new ManageLightsGoal(house.rooms, 7, 23));
+houseAgent.intentions.push(ManageLightsIntention);
+houseAgent.postSubGoal(new ManageLightsGoal(house.rooms));
 
-agent.intentions.push(ManageConsumptionIntention);
-agent.postSubGoal(new ManageConsumptionGoal(house.rooms));
+houseAgent.intentions.push(AutoTurnLightOnOffIntention);
+houseAgent.postSubGoal(new AutoTurnLightOnOffGoal(house.rooms));
 
-agent.intentions.push(ManageThermostatsIntention);
-agent.postSubGoal(new ManageThermostatsGoal(house.rooms));
+houseAgent.intentions.push(ManageThermostatsIntention);
+houseAgent.postSubGoal(new ManageThermostatsGoal(house.rooms));
 
-// Check and update temperature 
+houseAgent.intentions.push(ManageConsumptionIntention);
+houseAgent.postSubGoal(new ManageConsumptionGoal(house.rooms));
+
+houseAgent.intentions.push(ManageRollUpShuttersIntention);
+houseAgent.postSubGoal(new ManageRollUpShuttersGoal(house.rooms));
+
+houseAgent.intentions.push(ManageSolarPanelIntention);
+houseAgent.postSubGoal(new ManageSolarPanelGoal(house.getRoom('pantry')));
+
+let vacuumCleaners = {};
+ for (let vacuumCleaner of vacuumCleanerAgents) {
+    if (GlobalUtilities.isValidObj(vacuumCleaner.getDevice())) {
+        vacuumCleaners[vacuumCleaner.getOperationLevel()] = vacuumCleaner.getDevice();
+
+        vacuumCleaner.intentions.push(VacuumCleanerIntention);
+        vacuumCleaner.postSubGoal(new VacuumCleanerGoal());
+    }
+
+    houseAgent.beliefs.observeAny(sensor(vacuumCleaner));
+}
+
+if (GlobalUtilities.isValidObj(vacuumCleaners)) {
+    houseAgent.intentions.push(CleanlinessIntention);
+    houseAgent.postSubGoal(new CleanlinessGoal(house.getRoomList(), vacuumCleaners, 5));
+}
+
+//Check and update temperature 
 Clock.global.observe('hh', (key, hh) =>{
-    if (Clock.global.hh % 2 == 0) {
+    if (Clock.global.hh % 3 == 0) {
         for (let [key_t, room] of Object.entries(house.rooms)) {
             if (room.devices.thermostat)
-                room.devices.thermostat.updateTemperature()
+                room.devices.thermostat.updateTemperature();
         }
     }
 })
@@ -44,7 +77,22 @@ Clock.global.observe('hh', (key, hh) =>{
 Clock.global.observe('mm', (key, mm) => {
     var time = Clock.global
 
+    // enable if you don't want to
+    // run all the simulation
+
+    // if (time.dd > DaysEnum.tuesday) {
+    //     // Stop clock
+    //     Clock.stopTimer();
+    //     logger.close();
+    //     process.exit(0);
+    // }
+
     if (time.dd <= DaysEnum.friday) {
+        if (time.hh == houseAgent.alarmClock.getHH() &&
+             time.mm == (houseAgent.alarmClock.getMM() + 5)) {
+            houseAgent.turnOffAlarmClock();
+        }
+        
         if (time.hh == 6 && time.mm == 50) {
             house.people.Adam.moveTo('ff_bathroom');
             house.people.Ashley.moveTo('ff_bathroom');
@@ -135,7 +183,7 @@ Clock.global.observe('mm', (key, mm) => {
             house.people.Ashley.moveTo('living_room');
         }
     }
-    
+
     switch (time.dd) {
         case DaysEnum.monday:
             {
@@ -227,7 +275,7 @@ Clock.global.observe('mm', (key, mm) => {
             {
                 // Stop clock
                 Clock.stopTimer();
-                return;
+                process.exit(0);
             }
     }
 
